@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,14 +9,20 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Keyboard,
+  Alert,
 } from "react-native";
 
 import { colors } from "../constants/colors";
 import Timer from "../components/Timer";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import { verifyOTP } from "../utils/api";
+import Title from "../components/Title";
+import { saveToken } from "../utils/identity";
 
-export default function Otp({ navigation }) {
+export default function Otp({ route, navigation }) {
+  const { phoneNumber } = route.params;
+  console.log("Phone number from route params:", phoneNumber);
   const [code, setCode] = useState(["", "", "", ""]);
   const inputs = useRef([]);
 
@@ -36,10 +42,20 @@ export default function Otp({ navigation }) {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const fullCode = code.join("");
     console.log("Entered code:", fullCode);
-    navigation.navigate("map");
+    const result = await verifyOTP(phoneNumber, fullCode);
+    console.log("OTP verify result:", result);
+    if (result?.token) {
+      await saveToken(result.token);
+      navigation.navigate("map");
+    } else {
+      Alert.alert(
+        "Invalid OTP",
+        "The OTP you entered is incorrect. Please try again."
+      );
+    }
   };
 
   const isDisabled = code.some((digit) => digit === "");
@@ -63,7 +79,7 @@ export default function Otp({ navigation }) {
         >
           <View style={styles.container}>
             <Card>
-              <Text style={styles.title}>Enter Verification Code</Text>
+              <Title mainHeading>Enter Verification Code</Title>
               <Text style={styles.subtitle}>
                 We’ve sent a 4-digit code to your number{" "}
                 <Text style={styles.number}>XXXXX1190</Text>
@@ -103,20 +119,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.gray100,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 16,
   },
-  title: {
-    color: colors.gray900,
-    fontWeight: "bold",
-    fontSize: 22,
-    marginBottom: 8,
-    textAlign: "center",
-  },
   subtitle: {
-    color: colors.gray600,
     fontSize: 12,
     marginBottom: 24,
     textAlign: "center",

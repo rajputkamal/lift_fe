@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
@@ -12,15 +11,16 @@ import {
 import * as Location from "expo-location";
 
 import Card from "../components/Card";
-import { colors } from "../constants/colors";
 import Button from "../components/Button";
 import Map from "../components/Map";
 import SuggestionList from "../components/SuggestionList";
 import { GOOGLE_MAPS_API_KEY } from "../constants/googleMap";
 import TimePicker from "../components/TimePicker";
 import Seats from "../components/Seats";
+import LiftInput from "../components/LiftInput";
+import { requestRide } from "../utils/api";
 
-export default function Home() {
+export default function Home({ navigation }) {
   const [time, setTime] = useState(new Date());
   const [seats, setSeats] = useState(3);
 
@@ -79,21 +79,35 @@ export default function Home() {
     Keyboard.dismiss();
   };
 
-  const onContinue = () => {
+  const onContinue = async () => {
     if (!origin || !destination)
       return Alert.alert("Missing info", "Please enter origin and destination");
     if (!time) return Alert.alert("Missing info", "Please enter ride time");
     if (!seats || parseInt(seats) <= 0)
       return Alert.alert("Invalid seats", "Please enter valid number of seats");
 
-    console.log({
+    const result = await requestRide({
       origin,
       destination,
       originCoords,
       destinationCoords,
       time,
-      seats,
+      seatsAvailable: seats,
     });
+
+    if (result?.message) {
+      console.log("Ride offered successfully------>", result);
+      Alert.alert("Success", "Your ride has been offered successfully.");
+      navigation.navigate("Rides");
+      setOrigin("");
+      setDestination("");
+      setOriginCoords(null);
+      setDestinationCoords(null);
+      setTime(new Date());
+      setSeats(3);
+    } else {
+      Alert.alert("Error", "Could not offer ride. Please try again later.");
+    }
   };
 
   const onChangeTextHandler = (text, field) => {
@@ -148,27 +162,21 @@ export default function Home() {
           />
 
           <Card style={{ paddingBottom: Platform.OS === "ios" ? 30 : 16 }}>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                onChangeText={(text) => onChangeTextHandler(text, "origin")}
-                onFocus={() => setActiveField("origin")}
-                value={origin}
-                placeholder="Enter origin"
-              />
-            </View>
+            <LiftInput
+              onChangeText={(text) => onChangeTextHandler(text, "origin")}
+              onFocus={() => setActiveField("origin")}
+              value={origin}
+              placeholder="Enter origin"
+              onPressCloseIcon={() => setOrigin("")}
+            />
 
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                onFocus={() => setActiveField("destination")}
-                onChangeText={(text) =>
-                  onChangeTextHandler(text, "destination")
-                }
-                value={destination}
-                placeholder="Enter destination"
-              />
-            </View>
+            <LiftInput
+              onFocus={() => setActiveField("destination")}
+              onChangeText={(text) => onChangeTextHandler(text, "destination")}
+              value={destination}
+              placeholder="Enter destination"
+              onPressCloseIcon={() => setDestination("")}
+            />
 
             <View style={styles.timeSeatsContainer}>
               <TimePicker time={time} setTime={setTime} />
@@ -198,22 +206,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: colors.gray300,
-    borderRadius: 10,
-    overflow: "hidden",
-  },
-  input: {
-    flex: 1,
-    fontSize: 14,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    color: colors.gray900,
   },
   timeSeatsContainer: {
     flexDirection: "row",

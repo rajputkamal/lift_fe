@@ -1,19 +1,21 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   ScrollView,
   Keyboard,
+  Alert,
 } from "react-native";
 
-import { colors } from "../constants/colors";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import LiftInput from "../components/LiftInput";
+import { fetchOTP } from "../utils/api";
+import Title from "../components/Title";
 
 export default function Login({ navigation }) {
   const [number, setNumber] = useState("");
@@ -30,13 +32,22 @@ export default function Login({ navigation }) {
     }
   };
 
-  const onContinue = () => {
+  const onContinue = async () => {
+    console.log("Continue pressed with number:", number);
     if (number.length !== 10) {
       setError("Mobile number must be 10 digits");
       return;
     }
-    console.log("Continue with number:", number);
-    navigation.navigate("otp");
+    const result = await fetchOTP(number);
+    console.log("OTP fetch result:", result);
+    if (result?.otp) {
+      navigation.navigate("otp", { phoneNumber: number });
+    } else {
+      Alert.alert(
+        "Something went wrong!",
+        "Failed to send OTP. Please try again."
+      );
+    }
   };
 
   useEffect(() => {
@@ -55,22 +66,21 @@ export default function Login({ navigation }) {
         >
           <View style={styles.container}>
             <Card>
-              <Text style={styles.title}>Welcome! Let’s get you riding.</Text>
+              <Title mainHeading>Welcome! Let’s get you riding.</Title>
 
-              <View style={styles.inputContainer}>
-                <Text style={styles.countryCode}>+91</Text>
-                <TextInput
-                  ref={inputRef}
-                  style={styles.input}
-                  onChangeText={numberChangeHandler}
-                  value={number}
-                  placeholder="Enter mobile number*"
-                  keyboardType="numeric"
-                  maxLength={10}
-                />
-              </View>
+              <LiftInput
+                ref={inputRef}
+                onChangeText={numberChangeHandler}
+                value={number}
+                placeholder="Enter mobile number*"
+                keyboardType="numeric"
+                maxLength={10}
+                onPressCloseIcon={() => setNumber("")}
+              />
 
-              {error.length > 0 && <Text style={styles.errorText}>{error}</Text>}
+              {error.length > 0 && (
+                <Text style={styles.errorText}>{error}</Text>
+              )}
 
               <Button onPress={onContinue} disabled={number.length !== 10}>
                 Continue
@@ -90,40 +100,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.gray100,
     paddingHorizontal: 16,
     justifyContent: "center",
-  },
-  title: {
-    color: colors.gray900,
-    fontWeight: "bold",
-    fontSize: 22,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: colors.gray300,
-    borderRadius: 10,
-    overflow: "hidden",
-  },
-  countryCode: {
-    fontSize: 16,
-    color: colors.gray900,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRightWidth: 1,
-    borderRightColor: colors.gray300
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    color: colors.gray900,
   },
   errorText: {
     color: "red",

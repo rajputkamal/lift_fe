@@ -5,25 +5,27 @@ import { colors } from "../constants/colors";
 import Card from "./Card";
 import Avatar from "./Avatar";
 import CallUser from "./CallUser";
+import Time from "./Time";
+import You from "./You";
 
 export default function RideCard({ ride }) {
+  let isOlderRide = false
   return (
     <Card>
-      {/* Header Section */}
       <View>
         <View style={styles.header}>
           <Avatar uri={ride?.userImage} />
           <View>
             <Text style={styles.userName}>{ride?.userName}</Text>
             <Text style={styles.rating}>
-              {/* ⭐ {ride?.rating ?? "4.8"}    //TODO:: Add rating later |{" "}  */}
-              {ride?.vehicle}
+              ⭐ {ride?.rating ?? "4.8"} |{" "} 
+              {ride?.vehicle ? ride.vehicle : "Vehicle info not available"}
             </Text>
           </View>
+          <You />
         </View>
       </View>
 
-      {/* Route Info */}
       <View style={styles.route}>
         <View style={styles.locationRow}>
           <Ionicons name="location-outline" size={18} color={colors.primary} />
@@ -36,13 +38,12 @@ export default function RideCard({ ride }) {
         </View>
       </View>
 
-      {/* Price and Time Info */}
       <View style={styles.detailsRow}>
         <Text style={styles.price}>₹{ride.price}</Text>
-        <Text style={styles.time}>{ride.time}</Text>
+        {/* <Text style={styles.time}>Today {ride.time}</Text> */}
+        <Time time={ride?.time} isOlderRide={isOlderRide} />
       </View>
-
-      <CallUser phoneNumber={ride?.phoneNumber} />
+      <CallUser phoneNumber={ride?.userNumber} isOlderRide={isOlderRide} />
     </Card>
   );
 }
@@ -93,9 +94,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     color: colors.primary,
-  },
-  time: {
-    fontSize: 13,
-    color: colors.gray400,
   },
 });
