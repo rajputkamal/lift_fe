@@ -21,8 +21,8 @@ import Title from "../components/Title";
 import { saveToken } from "../utils/identity";
 
 export default function Otp({ route, navigation }) {
+  const [loading, setLoading] = useState(false);
   const { phoneNumber } = route.params;
-  console.log("Phone number from route params:", phoneNumber);
   const [code, setCode] = useState(["", "", "", ""]);
   const inputs = useRef([]);
 
@@ -43,10 +43,9 @@ export default function Otp({ route, navigation }) {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const fullCode = code.join("");
-    console.log("Entered code:", fullCode);
     const result = await verifyOTP(phoneNumber, fullCode);
-    console.log("OTP verify result:", result);
     if (result?.token) {
       await saveToken(result.token);
       navigation.navigate("map");
@@ -56,6 +55,7 @@ export default function Otp({ route, navigation }) {
         "The OTP you entered is incorrect. Please try again."
       );
     }
+    setLoading(false);
   };
 
   const isDisabled = code.some((digit) => digit === "");
@@ -99,7 +99,11 @@ export default function Otp({ route, navigation }) {
                 ))}
               </View>
 
-              <Button onPress={handleSubmit} disabled={isDisabled}>
+              <Button
+                onPress={handleSubmit}
+                disabled={isDisabled}
+                loading={loading}
+              >
                 Get Started
               </Button>
 

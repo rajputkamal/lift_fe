@@ -1,28 +1,36 @@
+import { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import UserContext from "../context/UserContext";
 import { colors } from "../constants/colors";
 import Card from "./Card";
 import Avatar from "./Avatar";
 import CallUser from "./CallUser";
 import Time from "./Time";
-import You from "./You";
 
 export default function RideCard({ ride }) {
-  let isOlderRide = false
+  const { user } = useContext(UserContext);
+
+  const isYourRide = user?.phoneNumber === ride?.userNumber;
+
+  let isOlderRide = false;
+
   return (
     <Card>
       <View>
         <View style={styles.header}>
           <Avatar uri={ride?.userImage} />
           <View>
-            <Text style={styles.userName}>{ride?.userName}</Text>
+            <Text style={styles.userName}>
+              {ride?.userName}
+              {isYourRide && " (You)"}
+            </Text>
             <Text style={styles.rating}>
-              ⭐ {ride?.rating ?? "4.8"} |{" "} 
+              ⭐ {ride?.rating ?? "4.8"} |{" "}
               {ride?.vehicle ? ride.vehicle : "Vehicle info not available"}
             </Text>
           </View>
-          <You />
         </View>
       </View>
 
@@ -40,10 +48,13 @@ export default function RideCard({ ride }) {
 
       <View style={styles.detailsRow}>
         <Text style={styles.price}>₹{ride.price}</Text>
-        {/* <Text style={styles.time}>Today {ride.time}</Text> */}
         <Time time={ride?.time} isOlderRide={isOlderRide} />
       </View>
-      <CallUser phoneNumber={ride?.userNumber} isOlderRide={isOlderRide} />
+      <CallUser
+        phoneNumber={ride?.userNumber}
+        isOlderRide={isOlderRide}
+        isYourRide={isYourRide}
+      />
     </Card>
   );
 }

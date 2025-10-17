@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { View, FlatList, StyleSheet, Alert } from "react-native";
+import { View, FlatList, StyleSheet, Alert, ActivityIndicator } from "react-native";
 
 import RideCard from "../components/RideCard";
 import Title from "../components/Title";
 import { fetchAvailableRides } from "../utils/api";
+import { colors } from "../constants/colors";
 
 export default function AvailableRides() {
   const [allRides, setAllRides] = useState([]);
@@ -27,14 +28,19 @@ export default function AvailableRides() {
   return (
     <View style={styles.container}>
       <Title>Available Rides</Title>
-
-      <FlatList
-        data={allRides}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => <RideCard ride={item} />}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.listContent}
-      />
+      {allRides.length === 0 ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.gray900} />
+        </View>
+      ) : (
+        <FlatList
+          data={allRides}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => <RideCard ride={item} />}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContent}
+        />
+      )}
     </View>
   );
 }
@@ -48,4 +54,9 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 30,
   },
+  loadingContainer: {
+    flex: 1, 
+    justifyContent: "center", 
+    alignItems: "center"
+  }
 });

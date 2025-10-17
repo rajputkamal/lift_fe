@@ -21,6 +21,7 @@ import LiftInput from "../components/LiftInput";
 import { requestRide } from "../utils/api";
 
 export default function Home({ navigation }) {
+  const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(new Date());
   const [seats, setSeats] = useState(3);
 
@@ -86,6 +87,7 @@ export default function Home({ navigation }) {
     if (!seats || parseInt(seats) <= 0)
       return Alert.alert("Invalid seats", "Please enter valid number of seats");
 
+    setLoading(true);
     const result = await requestRide({
       origin,
       destination,
@@ -96,7 +98,6 @@ export default function Home({ navigation }) {
     });
 
     if (result?.message) {
-      console.log("Ride offered successfully------>", result);
       Alert.alert("Success", "Your ride has been offered successfully.");
       navigation.navigate("Rides");
       setOrigin("");
@@ -108,6 +109,7 @@ export default function Home({ navigation }) {
     } else {
       Alert.alert("Error", "Could not offer ride. Please try again later.");
     }
+    setLoading(false);
   };
 
   const onChangeTextHandler = (text, field) => {
@@ -141,8 +143,6 @@ export default function Home({ navigation }) {
 
         setOrigin(formattedAddress.trim());
         setOriginCoords({ latitude, longitude });
-
-        console.log("Current location:", formattedAddress);
       } catch (err) {
         console.error("Error fetching location:", err);
       }
@@ -191,7 +191,11 @@ export default function Home({ navigation }) {
             )}
 
             <View style={styles.buttonContainer}>
-              <Button onPress={onContinue} disabled={!origin || !destination}>
+              <Button
+                onPress={onContinue}
+                disabled={!origin || !destination}
+                loading={loading}
+              >
                 Offer Ride
               </Button>
             </View>

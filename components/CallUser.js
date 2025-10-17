@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Button from "./Button";
 import { colors } from "../constants/colors";
 
-export default function CallUser({ phoneNumber, isOlderRide }) {
+export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
   const handleCallUser = (phoneNumber) => {
     if (!phoneNumber) {
       Alert.alert("No phone number", "This user does not have a phone number.");
@@ -24,11 +24,14 @@ export default function CallUser({ phoneNumber, isOlderRide }) {
   };
 
   return (
-    <Button onPress={() => handleCallUser(phoneNumber)} disabled={isOlderRide}>
+    <Button
+      onPress={() => handleCallUser(phoneNumber)}
+      disabled={isOlderRide || isYourRide}
+    >
       <Ionicons
         name="call-outline"
         size={18}
-        color={isOlderRide ? colors.gray400 : colors.white}
+        color={isOlderRide || isYourRide ? colors.gray400 : colors.white}
       />
       Call
     </Button>

@@ -18,6 +18,7 @@ import { fetchOTP } from "../utils/api";
 import Title from "../components/Title";
 
 export default function Login({ navigation }) {
+  const [loading, setLoading] = useState(false);
   const [number, setNumber] = useState("");
   const [error, setError] = useState("");
   const inputRef = useRef(null);
@@ -33,13 +34,13 @@ export default function Login({ navigation }) {
   };
 
   const onContinue = async () => {
-    console.log("Continue pressed with number:", number);
+    setLoading(true);
     if (number.length !== 10) {
       setError("Mobile number must be 10 digits");
+      setLoading(false);
       return;
     }
     const result = await fetchOTP(number);
-    console.log("OTP fetch result:", result);
     if (result?.otp) {
       navigation.navigate("otp", { phoneNumber: number });
     } else {
@@ -48,6 +49,7 @@ export default function Login({ navigation }) {
         "Failed to send OTP. Please try again."
       );
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -82,7 +84,11 @@ export default function Login({ navigation }) {
                 <Text style={styles.errorText}>{error}</Text>
               )}
 
-              <Button onPress={onContinue} disabled={number.length !== 10}>
+              <Button
+                onPress={onContinue}
+                disabled={number.length !== 10}
+                loading={loading}
+              >
                 Continue
               </Button>
             </Card>

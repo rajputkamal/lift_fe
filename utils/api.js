@@ -43,7 +43,6 @@ export const verifyOTP = async (number, otp) => {
     }
 
     const data = await response.json();
-    console.log("Verify OTP Response:", data);
     return data;
   } catch (error) {
     console.error("Error verifying OTP:", error);
@@ -63,7 +62,6 @@ export const updateProfile = async (profileData) => {
       throw new Error(`Server responded with ${response.status}`);
     }
     const data = await response.json();
-    console.log("Update Profile Response:", data);
     return data;
   } catch (error) {
     console.error("Error updating profile:", error);
@@ -119,7 +117,6 @@ export const requestRide = async (rideData) => {
       throw new Error(`Server responded with ${response.status}`);
     }
     const data = await response.json();
-    console.log("Request Ride Response:", data);
     return data;
   } catch (error) {
     console.error("Error requesting ride:", error);

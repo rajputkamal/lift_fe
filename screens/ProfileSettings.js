@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -12,12 +12,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../constants/colors";
 import Card from "../components/Card";
 import Title from "../components/Title";
-import { getToken } from "../utils/identity";
-import { getUserProfile, updateProfile } from "../utils/api";
+import { deleteToken, getToken } from "../utils/identity";
+import { updateProfile } from "../utils/api";
+import UserContext from "../context/UserContext";
 
-export default function ProfileSettingsScreen() {
-  const [name, setName] = useState("");
-  const [mobile, setMobile] = useState("");
+export default function ProfileSettingsScreen({ navigation }) {
+  const { user, setUser } = useContext(UserContext);
+
+  const [name, setName] = useState(user?.name || "");
   const [editing, setEditing] = useState(false);
 
   const handleSave = async () => {
@@ -28,14 +30,12 @@ export default function ProfileSettingsScreen() {
 
     const token = await getToken();
 
-    console.log("Updating profile with name:", name, token);
-
     const result = await updateProfile({ name }, token);
     if (!result?.message) {
       Alert.alert("Error", "Failed to update profile. Please try again.");
       return;
     } else {
-      setName(result.user.name);
+      setUser({ ...user, name: result.user.name });
       Alert.alert(
         "Profile Updated",
         "Your name has been updated successfully."
@@ -44,21 +44,13 @@ export default function ProfileSettingsScreen() {
     setEditing(false);
   };
 
-  useLayoutEffect(() => {
-    async function fetchProfile() {
-      const result = await getUserProfile();
-      if (result?.data?.name || result?.data?.mobile) {
-        setName(result.data?.name);
-        setMobile(result.data?.phoneNumber);
-      } else {
-        Alert.alert(
-          "Error",
-          "Could not fetch profile data. Please try again later."
-        );
-      }
-    }
-    fetchProfile();
-  }, []);
+  const logout = async () => {
+    await deleteToken();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "login" }],
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -78,7 +70,7 @@ export default function ProfileSettingsScreen() {
                 placeholderTextColor={colors.gray400}
               />
             ) : (
-              <Text style={styles.value}>{name ? name : "NA"}</Text>
+              <Text style={styles.value}>{user?.name ? user?.name : "NA"}</Text>
             )}
           </View>
 
@@ -97,7 +89,7 @@ export default function ProfileSettingsScreen() {
       <Card>
         <View>
           <Text style={styles.label}>Mobile</Text>
-          <Text style={styles.value}>{mobile}</Text>
+          <Text style={styles.value}>{user?.phoneNumber}</Text>
         </View>
       </Card>
 
@@ -106,6 +98,11 @@ export default function ProfileSettingsScreen() {
           <Text style={styles.label}>App Version</Text>
           <Text style={styles.value}>v1.0.0</Text>
         </View>
+      </Card>
+      <Card>
+        <TouchableOpacity onPress={logout}>
+          <Text style={styles.logout}>Logout</Text>
+        </TouchableOpacity>
       </Card>
     </View>
   );
@@ -142,5 +139,10 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingVertical: 10,
     paddingHorizontal: 12,
+  },
+  logout: {
+    color: colors.orange500,
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

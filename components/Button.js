@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 
 import { colors } from "../constants/colors";
 
@@ -8,6 +8,7 @@ export default function Button({
   secondary,
   customStyles,
   disabled,
+  loading,
 }) {
   return (
     <TouchableOpacity
@@ -21,15 +22,19 @@ export default function Button({
       activeOpacity={disabled ? 1 : 0.7}
       disabled={disabled}
     >
-      <Text
-        style={[
-          styles.buttonText,
-          secondary && styles.secondaryButtonText,
-          disabled && styles.disabledText,
-        ]}
-      >
-        {children}
-      </Text>
+      {loading ? (
+        <ActivityIndicator size="small" color={colors.gray300} />
+      ) : (
+        <Text
+          style={[
+            styles.buttonText,
+            secondary && styles.secondaryButtonText,
+            disabled && styles.disabledText,
+          ]}
+        >
+          {children}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 }
