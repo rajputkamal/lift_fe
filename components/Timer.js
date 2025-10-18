@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import { colors } from "../constants/colors";
 
-export default function Timer() {
+export default function Timer({ timeLeft, setTimeLeft, handleResend }) {
   const timerRef = useRef(null);
-  const [timeLeft, setTimeLeft] = useState(180);
 
   useEffect(() => {
     if (timeLeft <= 0) return;
@@ -16,11 +15,6 @@ export default function Timer() {
 
     return () => clearInterval(timerRef.current);
   }, [timeLeft]);
-
-  const handleResend = () => {
-    setTimeLeft(180);
-    // TODO: trigger your resend OTP API call here
-  };
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -45,13 +39,14 @@ export default function Timer() {
 
 const styles = StyleSheet.create({
   subtitle: {
-    color: colors.gray600,
+    color: colors.orange500,
     fontSize: 14,
     marginVertical: 24,
     textAlign: "center",
+    fontWeight: "500",
   },
   resendText: {
-    color: colors.purple600,
+    color: colors.orange500,
     fontWeight: "bold",
   },
 });

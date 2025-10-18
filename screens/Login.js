@@ -41,7 +41,7 @@ export default function Login({ navigation }) {
       return;
     }
     const result = await fetchOTP(number);
-    if (result?.otp) {
+    if (result?.message === "OTP sent successfully") {
       navigation.navigate("otp", { phoneNumber: number });
     } else {
       Alert.alert(

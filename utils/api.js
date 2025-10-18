@@ -23,7 +23,6 @@ export const fetchOTP = async (number) => {
     }
 
     const data = await response.json();
-    console.log("OTP Response:", data);
     return data;
   } catch (error) {
     console.error("Error fetching OTP:", error);

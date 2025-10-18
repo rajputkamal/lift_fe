@@ -19,9 +19,12 @@ import Button from "../components/Button";
 import { verifyOTP } from "../utils/api";
 import Title from "../components/Title";
 import { saveToken } from "../utils/identity";
+import { fetchOTP } from "../utils/api";
+import { maskNumber } from "../utils/helper";
 
 export default function Otp({ route, navigation }) {
   const [loading, setLoading] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(180);
   const { phoneNumber } = route.params;
   const [code, setCode] = useState(["", "", "", ""]);
   const inputs = useRef([]);
@@ -67,6 +70,11 @@ export default function Otp({ route, navigation }) {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleResend = async () => {
+    await fetchOTP(phoneNumber);
+    setTimeLeft(180);
+  };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -82,7 +90,7 @@ export default function Otp({ route, navigation }) {
               <Title mainHeading>Enter Verification Code</Title>
               <Text style={styles.subtitle}>
                 We’ve sent a 4-digit code to your number{" "}
-                <Text style={styles.number}>XXXXX1190</Text>
+                <Text style={styles.number}>{maskNumber(phoneNumber)}</Text>
               </Text>
 
               <View style={styles.inputRow}>
@@ -107,7 +115,11 @@ export default function Otp({ route, navigation }) {
                 Get Started
               </Button>
 
-              <Timer />
+              <Timer
+                timeLeft={timeLeft}
+                setTimeLeft={setTimeLeft}
+                handleResend={handleResend}
+              />
             </Card>
           </View>
         </ScrollView>
@@ -128,7 +140,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   subtitle: {
-    fontSize: 12,
+    fontSize: 11,
     marginBottom: 24,
     textAlign: "center",
   },
@@ -149,5 +161,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 8,
     color: colors.gray900,
+  },
+  number: {
+    fontWeight: 600,
+    color: colors.gray900,
+    fontSize: 12,
   },
 });
