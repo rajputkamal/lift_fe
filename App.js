@@ -11,6 +11,7 @@ import Otp from "./screens/Otp";
 import Home from "./screens/Home";
 import ProfileSettings from "./screens/ProfileSettings";
 import AvailableRides from "./screens/AvailableRides";
+import Splash from "./screens/Splash";
 // Components
 import Logo from "./components/Logo";
 
@@ -56,11 +57,12 @@ export default function App() {
       <StatusBar style="dark" />
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="login"
+          initialRouteName="splash"
           screenOptions={{
             headerTitle: () => <Logo />,
           }}
         >
+          <Stack.Screen name="splash" component={Splash} />
           <Stack.Screen name="login" component={Login} />
           <Stack.Screen
             name="otp"

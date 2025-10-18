@@ -1,5 +1,11 @@
-import { View, TextInput, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Fontisto from '@expo/vector-icons/Fontisto';
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import Fontisto from "@expo/vector-icons/Fontisto";
 
 import { colors } from "../constants/colors";
 
@@ -18,6 +24,8 @@ export default function LiftInput({
         style={styles.input}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
+        autoCorrect={false}
+        spellCheck={false}
         {...props}
       />
       <TouchableOpacity style={styles.icon} onPress={onPressCloseIcon}>
@@ -53,6 +61,6 @@ const styles = StyleSheet.create({
     color: colors.gray900,
   },
   icon: {
-    paddingHorizontal: 12
-  }
+    paddingHorizontal: 12,
+  },
 });

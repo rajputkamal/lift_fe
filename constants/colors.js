@@ -4,6 +4,7 @@ export const colors = {
   black: "#000000",
   purple600: "#007AFF", //primary (buttons & focus) old purplecode #7C3AED
   orange500: "#F97316", // seconday
+  gray200: "#E5E7EB", // backgrounds
   gray300: "#D1D5DB", // input borders
   blue600: "#007AFF", //Matches button, helps user see focus
   gray900: "#1E1E1E", //Titles & main labels primary

@@ -20,7 +20,7 @@ export default function RideCard({ ride }) {
     <Card>
       <View>
         <View style={styles.header}>
-          <Avatar uri={ride?.userImage} />
+          <Avatar uri={ride?.userImage} name={ride?.userName} />
           <View>
             <Text style={styles.userName}>
               {ride?.userName}
