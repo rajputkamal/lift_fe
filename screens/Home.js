@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -8,6 +8,7 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import * as Location from "expo-location";
 
 import Card from "../components/Card";
@@ -119,35 +120,47 @@ export default function Home({ navigation }) {
     fetchPlaces(text);
   };
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          console.warn("Permission to access location was denied");
-          return;
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const fetchLocation = async () => {
+        try {
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== "granted") {
+            console.warn("Permission to access location was denied");
+            return;
+          }
+
+          const currentLocation = await Location.getCurrentPositionAsync({});
+          const { latitude, longitude } = currentLocation.coords;
+
+          const reverseGeocode = await Location.reverseGeocodeAsync({
+            latitude,
+            longitude,
+          });
+
+          const address = reverseGeocode[0];
+          const formattedAddress = `${address.name || ""} ${
+            address.street || ""
+          }, ${address.city || ""}, ${address.region || ""}`;
+
+          if (isActive) {
+            setOrigin(formattedAddress.trim());
+            setOriginCoords({ latitude, longitude });
+          }
+        } catch (err) {
+          console.error("Error fetching location:", err);
         }
+      };
 
-        const currentLocation = await Location.getCurrentPositionAsync({});
-        const { latitude, longitude } = currentLocation.coords;
+      fetchLocation();
 
-        const reverseGeocode = await Location.reverseGeocodeAsync({
-          latitude,
-          longitude,
-        });
-
-        const address = reverseGeocode[0];
-        const formattedAddress = `${address.name || ""} ${
-          address.street || ""
-        }, ${address.city || ""}, ${address.region || ""}`;
-
-        setOrigin(formattedAddress.trim());
-        setOriginCoords({ latitude, longitude });
-      } catch (err) {
-        console.error("Error fetching location:", err);
-      }
-    })();
-  }, []);
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
   return (
     <KeyboardAvoidingView

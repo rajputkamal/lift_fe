@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   View,
   FlatList,
@@ -16,7 +16,7 @@ import { colors } from "../constants/colors";
 export default function AvailableRides() {
   const [allRides, setAllRides] = useState([]);
 
-  async function getAllRides() {
+  const getAllRides = useCallback(async () => {
     const results = await fetchAvailableRides();
     if (results?.rides) {
       setAllRides(results.rides);
@@ -26,13 +26,14 @@ export default function AvailableRides() {
         "Could not fetch available rides. Please try again later."
       );
     }
-  }
+  }, []);
 
-  useFocusEffect(() => {
-    // useCallback(() => {
-    getAllRides();
-    // }, []);
-  });
+  useFocusEffect(
+    useCallback(() => {
+      getAllRides();
+      return () => {};
+    }, [getAllRides])
+  );
 
   return (
     <View style={styles.container}>
