@@ -1,8 +1,9 @@
+import { useEffect } from "react";
 import { Text, StyleSheet } from "react-native";
 
 import { colors } from "../constants/colors";
 
-export default function Time({ time, onLabelChange }) {
+export default function Time({ time, setIsOlderRide }) {
   if (!time) return null;
 
   const rideDate = new Date(time);
@@ -30,7 +31,15 @@ export default function Time({ time, onLabelChange }) {
     dayString = `${day}-${month}-${year}`;
   }
 
-  if (onLabelChange) onLabelChange(dayString);
+  useEffect(() => {
+    if (setIsOlderRide) {
+      if (dayString !== "Today") {
+        setIsOlderRide(true);
+      } else {
+        setIsOlderRide(false);
+      }
+    }
+  }, [dayString]);
 
   const hours = rideDate.getHours().toString().padStart(2, "0");
   const minutes = rideDate.getMinutes().toString().padStart(2, "0");

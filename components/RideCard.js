@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -11,10 +11,9 @@ import Time from "./Time";
 
 export default function RideCard({ ride }) {
   const { user } = useContext(UserContext);
+  const [isOlderRide, setIsOlderRide] = useState(false);
 
   const isYourRide = user?.phoneNumber === ride?.userNumber;
-
-  let isOlderRide = false;
 
   return (
     <Card>
@@ -48,7 +47,7 @@ export default function RideCard({ ride }) {
 
       <View style={styles.detailsRow}>
         <Text style={styles.price}>₹{ride.price}</Text>
-        <Time time={ride?.time} isOlderRide={isOlderRide} />
+        <Time time={ride?.time} setIsOlderRide={setIsOlderRide} />
       </View>
       <CallUser
         phoneNumber={ride?.userNumber}

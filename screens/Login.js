@@ -16,6 +16,7 @@ import Button from "../components/Button";
 import LiftInput from "../components/LiftInput";
 import { fetchOTP } from "../utils/api";
 import Title from "../components/Title";
+import { colors } from "../constants/colors";
 
 export default function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
@@ -69,6 +70,10 @@ export default function Login({ navigation }) {
           <View style={styles.container}>
             <Card>
               <Title mainHeading>Welcome! Let’s get you riding.</Title>
+              <Title subHeading>
+                Ready to share a ride and{" "}
+                <Text style={{ color: colors.blue600 }}>save more?</Text>
+              </Title>
 
               <LiftInput
                 ref={inputRef}

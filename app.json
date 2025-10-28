@@ -1,18 +1,19 @@
 {
   "expo": {
-    "name": "",
+    "name": "Lift, Ride Sharing App",
     "slug": "lift_fe",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo_lift.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/logo_lift.png",
+      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow Lift to use your location to find nearby rides."
@@ -20,14 +21,21 @@
       "bundleIdentifier": "com.anonymous.lift-fe"
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.rajputkamal.lift_fe"
     },
     "web": {
       "favicon": "./assets/logo_lift.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f5d84cbd-67e6-4ef5-8324-ba7910863e99"
+      }
     }
   }
 }

@@ -6,6 +6,13 @@ import { colors } from "../constants/colors";
 
 export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
   const handleCallUser = (phoneNumber) => {
+    if (isOlderRide) {
+      Alert.alert(
+        "Ride Completed",
+        "This ride has already ended. You can only call users for active or upcoming rides."
+      );
+      return;
+    }
     if (!phoneNumber) {
       Alert.alert("No phone number", "This user does not have a phone number.");
       return;
@@ -24,14 +31,11 @@ export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
   };
 
   return (
-    <Button
-      onPress={() => handleCallUser(phoneNumber)}
-      disabled={isOlderRide || isYourRide}
-    >
+    <Button onPress={() => handleCallUser(phoneNumber)} disabled={isYourRide}>
       <Ionicons
         name="call-outline"
         size={18}
-        color={isOlderRide || isYourRide ? colors.gray400 : colors.white}
+        color={isYourRide ? colors.gray400 : colors.white}
       />
       Call
     </Button>

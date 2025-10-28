@@ -179,7 +179,7 @@ export default function Home({ navigation }) {
               onChangeText={(text) => onChangeTextHandler(text, "origin")}
               onFocus={() => setActiveField("origin")}
               value={origin}
-              placeholder="Enter origin"
+              placeholder="Your location"
               onPressCloseIcon={() => setOrigin("")}
             />
 
@@ -187,7 +187,7 @@ export default function Home({ navigation }) {
               onFocus={() => setActiveField("destination")}
               onChangeText={(text) => onChangeTextHandler(text, "destination")}
               value={destination}
-              placeholder="Enter destination"
+              placeholder="Where to?"
               onPressCloseIcon={() => setDestination("")}
             />
 
