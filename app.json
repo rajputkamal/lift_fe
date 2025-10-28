@@ -28,7 +28,15 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.rajputkamal.lift_fe",
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCSPhVxZQPx55OSGyjQmcTwx_y3HtBxDMQ"
+        }
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/logo_lift.png"
