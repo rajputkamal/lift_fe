@@ -1,8 +1,9 @@
 import { getToken } from "./identity";
 
-const BASE_URL = "https://lift-be.onrender.com/api";
-//Added just for local testing purposes
-const LOCAL_HOST_BASE_URL = "http://192.168.31.144:5000/api";
+const BASE_URL = `${process.env.EXPO_PUBLIC_API_URL}/api`;
+// TODO:: Clean later
+// Added just for local testing purposes
+const LOCAL_HOST_BASE_URL = `${process.env.EXPO_PUBLIC_LOCAL_HOST_API_URL}/api`;
 
 const buildHeaders = (token) => {
   const headers = { "Content-Type": "application/json" };

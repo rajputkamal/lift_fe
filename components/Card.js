@@ -9,10 +9,10 @@ export default function Card({ children }) {
 const styles = StyleSheet.create({
   card: {
     width: "100%",
-    // maxWidth: "400px",
     backgroundColor: colors.white,
     borderRadius: 16,
-    padding: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     marginVertical: 8,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 4 },

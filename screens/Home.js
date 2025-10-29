@@ -15,11 +15,12 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import Map from "../components/Map";
 import SuggestionList from "../components/SuggestionList";
-import { GOOGLE_MAPS_API_KEY } from "../constants/googleMap";
 import TimePicker from "../components/TimePicker";
 import Seats from "../components/Seats";
 import LiftInput from "../components/LiftInput";
 import { requestRide } from "../utils/api";
+
+const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 export default function Home({ navigation }) {
   const [loading, setLoading] = useState(false);

@@ -3,7 +3,8 @@ import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 
 import { colors } from "../constants/colors";
-import { GOOGLE_MAPS_API_KEY } from "../constants/googleMap";
+
+const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 export default function Map({ originCoords, destinationCoords }) {
   const region = {
