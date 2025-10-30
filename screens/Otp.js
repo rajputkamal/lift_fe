@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   TextInput,
   KeyboardAvoidingView,
@@ -88,10 +87,10 @@ export default function Otp({ route, navigation }) {
           <View style={styles.container}>
             <Card>
               <Title mainHeading>Enter Verification Code</Title>
-              <Text style={styles.subtitle}>
+              <Title subHeading>
                 We’ve sent a 4-digit code to your number{" "}
-                <Text style={styles.number}>{maskNumber(phoneNumber)}</Text>
-              </Text>
+                {maskNumber(phoneNumber)}
+              </Title>
 
               <View style={styles.inputRow}>
                 {code.map((digit, index) => (
@@ -139,11 +138,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 16,
   },
-  subtitle: {
-    fontSize: 11,
-    marginBottom: 24,
-    textAlign: "center",
-  },
   inputRow: {
     flexDirection: "row",
     justifyContent: "center",
@@ -161,10 +155,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 8,
     color: colors.gray900,
-  },
-  number: {
-    fontWeight: 600,
-    color: colors.gray900,
-    fontSize: 12,
   },
 });

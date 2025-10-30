@@ -26,17 +26,18 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 600,
-    marginBottom: 12,
+    marginBottom: 10,
     color: colors.gray900,
     textAlign: "center",
   },
   mainHeading: {
     fontSize: 22,
-    fontWeight: "bold",
+    fontWeight: 700,
   },
   subHeading: {
     color: colors.gray400,
     fontWeight: 400,
-    fontSize: 16
+    fontSize: 16,
+    lineHeight: 22
   },
 });
