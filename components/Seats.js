@@ -9,7 +9,7 @@ export default function Seats({ seats, setSeats }) {
       setSeats(newSeats);
     } else {
       Alert.alert(
-        "Maximum seats reached",
+        "Maximum seats reached!",
         "You cannot have more than 6 seats."
       );
     }
@@ -20,7 +20,7 @@ export default function Seats({ seats, setSeats }) {
       const newSeats = seats - 1;
       setSeats(newSeats);
     } else {
-      Alert.alert("Minimum seats reached", "You must have at least 1 seat.");
+      Alert.alert("Minimum seats reached!", "You must have at least 1 seat.");
     }
   };
 

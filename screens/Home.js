@@ -83,11 +83,15 @@ export default function Home({ navigation }) {
   };
 
   const onContinue = async () => {
-    if (!origin || !destination)
-      return Alert.alert("Missing info", "Please enter origin and destination");
-    if (!time) return Alert.alert("Missing info", "Please enter ride time");
-    if (!seats || parseInt(seats) <= 0)
-      return Alert.alert("Invalid seats", "Please enter valid number of seats");
+    if (!origin) {
+      return Alert.alert("Missing info", "Please enter your pick-up location.");
+    }
+    if (!destination) {
+      return Alert.alert(
+        "Missing info",
+        "Please enter your drop off location."
+      );
+    }
 
     setLoading(true);
     const result = await requestRide({

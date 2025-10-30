@@ -28,16 +28,14 @@ export default function ProfileSettingsScreen({ navigation }) {
       return;
     }
 
-    const token = await getToken();
-
-    const result = await updateProfile({ name }, token);
+    const result = await updateProfile({ name });
     if (!result?.message) {
       Alert.alert("Error", "Failed to update profile. Please try again.");
       return;
     } else {
       setUser({ ...user, name: result.user.name });
       Alert.alert(
-        "Profile Updated",
+        "Profile Updated!",
         "Your name has been updated successfully."
       );
     }
@@ -68,6 +66,7 @@ export default function ProfileSettingsScreen({ navigation }) {
                 autoFocus
                 placeholder="Enter your name"
                 placeholderTextColor={colors.gray400}
+                autoCorrect={false}
               />
             ) : (
               <Text style={styles.value}>{user?.name ? user?.name : "NA"}</Text>

@@ -25,6 +25,7 @@ Use the node package manager [NPM](https://www.npmjs.com/) to install all depend
 ```bash
 npm install
 ```
+To get the `.env` file contact the developer.
 
 To run the mobile app in simulators or real device.
 ```bash

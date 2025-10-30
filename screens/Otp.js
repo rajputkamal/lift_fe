@@ -23,11 +23,11 @@ import { fetchOTP } from "../utils/api";
 import { maskNumber } from "../utils/helper";
 
 export default function Otp({ route, navigation }) {
+  const inputs = useRef([]);
+  const { phoneNumber } = route.params;
   const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(180);
-  const { phoneNumber } = route.params;
   const [code, setCode] = useState(["", "", "", ""]);
-  const inputs = useRef([]);
 
   const handleChange = (text, index) => {
     if (/^\d$/.test(text)) {
