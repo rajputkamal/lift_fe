@@ -28,9 +28,11 @@ export default function LiftInput({
         spellCheck={false}
         {...props}
       />
-      <TouchableOpacity style={styles.icon} onPress={onPressCloseIcon}>
-        <Fontisto name="close" size={18} color={colors.gray400} />
-      </TouchableOpacity>
+      {props.value?.length > 0 && (
+        <TouchableOpacity style={styles.icon} onPress={onPressCloseIcon}>
+          <Fontisto name="close" size={18} color={colors.gray400} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

@@ -4,13 +4,13 @@ import { colors } from "../constants/colors";
 
 export default function Seats({ seats, setSeats }) {
   const increment = () => {
-    if (seats < 6) {
+    if (seats < 4) {
       const newSeats = seats + 1;
       setSeats(newSeats);
     } else {
       Alert.alert(
         "Maximum seats reached!",
-        "You cannot have more than 6 seats."
+        "You cannot have more than 4 seats."
       );
     }
   };

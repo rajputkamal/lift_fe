@@ -103,6 +103,11 @@ export default function ProfileSettingsScreen({ navigation }) {
           <Text style={styles.logout}>Logout</Text>
         </TouchableOpacity>
       </Card>
+      <View style={styles.copyrightContainer}>
+        <Text style={styles.label}>
+          Copyright © {new Date().getFullYear()} Lift. All Rights Reserved.
+        </Text>
+      </View>
     </View>
   );
 }
@@ -143,5 +148,8 @@ const styles = StyleSheet.create({
     color: colors.orange500,
     fontSize: 16,
     fontWeight: "600",
+  },
+  copyrightContainer: {
+    marginTop: "auto",
   },
 });

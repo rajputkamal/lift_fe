@@ -37,7 +37,7 @@ export default function Login({ navigation }) {
   const onContinue = async () => {
     setLoading(true);
     if (number.length !== 10) {
-      setError("Mobile number must be 10 digits");
+      setError("Mobile number must be 10 digits.");
       setLoading(false);
       return;
     }
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   errorText: {
-    color: "red",
+    color: colors.orange500,
     marginBottom: 10,
     fontSize: 12,
   },
