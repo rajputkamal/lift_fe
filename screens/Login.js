@@ -69,10 +69,14 @@ export default function Login({ navigation }) {
         >
           <View style={styles.container}>
             <Card>
-              <Title mainHeading>Welcome! Let’s get you riding.</Title>
+              {/* <Title mainHeading>Welcome! Let’s get you riding.</Title> */}
+              <Title mainHeading>
+                Share your route. Save your cost.{" "}
+                <Text style={styles.highlightedText}>Ride together.</Text>{" "}
+              </Title>
               <Title subHeading>
                 Ready to share a ride and{" "}
-                <Text style={{ color: colors.blue600 }}>save more?</Text>
+                <Text style={styles.highlightedText}>save more?</Text>
               </Title>
 
               <LiftInput
@@ -118,5 +122,8 @@ const styles = StyleSheet.create({
     color: colors.orange500,
     marginBottom: 10,
     fontSize: 12,
+  },
+  highlightedText: {
+    color: colors.blue600,
   },
 });

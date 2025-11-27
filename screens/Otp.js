@@ -9,6 +9,7 @@ import {
   ScrollView,
   Keyboard,
   Alert,
+  Text,
 } from "react-native";
 
 import { colors } from "../constants/colors";
@@ -89,7 +90,9 @@ export default function Otp({ route, navigation }) {
               <Title mainHeading>Enter Verification Code</Title>
               <Title subHeading>
                 We’ve sent a 4-digit code to your number{" "}
-                {maskNumber(phoneNumber)}
+                <Text style={styles.maskedNumber}>
+                  {maskNumber(phoneNumber)}
+                </Text>
               </Title>
 
               <View style={styles.inputRow}>
@@ -155,5 +158,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 8,
     color: colors.gray900,
+  },
+  maskedNumber: {
+    color: colors.gray900,
+    fontWeight: 500,
   },
 });

@@ -12,9 +12,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../constants/colors";
 import Card from "../components/Card";
 import Title from "../components/Title";
-import { deleteToken, getToken } from "../utils/identity";
+import { deleteToken } from "../utils/identity";
 import { updateProfile } from "../utils/api";
 import UserContext from "../context/UserContext";
+import CopyRight from "../components/CopyRight";
 
 export default function ProfileSettingsScreen({ navigation }) {
   const { user, setUser } = useContext(UserContext);
@@ -103,11 +104,7 @@ export default function ProfileSettingsScreen({ navigation }) {
           <Text style={styles.logout}>Logout</Text>
         </TouchableOpacity>
       </Card>
-      <View style={styles.copyrightContainer}>
-        <Text style={styles.label}>
-          Copyright © {new Date().getFullYear()} Lift. All Rights Reserved.
-        </Text>
-      </View>
+      <CopyRight />
     </View>
   );
 }
@@ -149,7 +146,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-  copyrightContainer: {
-    marginTop: "auto",
-  },
+  
 });
