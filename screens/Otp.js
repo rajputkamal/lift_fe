@@ -89,10 +89,14 @@ export default function Otp({ route, navigation }) {
             <Card>
               <Title mainHeading>Enter Verification Code</Title>
               <Title subHeading>
-                We’ve sent a 4-digit code to your number{" "}
+                A 4‑digit code has been sent to
                 <Text style={styles.maskedNumber}>
-                  {maskNumber(phoneNumber)}
+                  {" "}
+                  {maskNumber(phoneNumber)}{" "}
                 </Text>
+                If you don’t get it, we'll
+                <Text style={styles.maskedNumber}> call you </Text>
+                with the code.
               </Title>
 
               <View style={styles.inputRow}>
@@ -145,7 +149,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 12,
     gap: 10,
   },
   inputBox: {
