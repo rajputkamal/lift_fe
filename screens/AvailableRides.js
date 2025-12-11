@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import Fontisto from "@expo/vector-icons/Fontisto";
 
 import RideCard from "../components/RideCard";
 import Title from "../components/Title";
@@ -14,9 +15,11 @@ import { fetchAvailableRides } from "../utils/api";
 import { colors } from "../constants/colors";
 
 export default function AvailableRides() {
+  const [loading, setLoading] = useState(false);
   const [allRides, setAllRides] = useState([]);
 
   const getAllRides = useCallback(async () => {
+    setLoading(true);
     const results = await fetchAvailableRides();
     if (results?.rides) {
       setAllRides(results.rides);
@@ -26,6 +29,7 @@ export default function AvailableRides() {
         "Could not fetch available rides. Please try again later."
       );
     }
+    setLoading(false);
   }, []);
 
   useFocusEffect(
@@ -38,9 +42,16 @@ export default function AvailableRides() {
   return (
     <View style={styles.container}>
       <Title>Available Rides</Title>
-      {allRides.length === 0 ? (
+      {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.gray900} />
+        </View>
+      ) : !loading && allRides.length === 0 ? (
+        <View style={styles.loadingContainer}>
+          <Title subHeading>
+            No rides found. Try refreshing or check again later.
+          </Title>
+          <Fontisto name="car" size={36} color={colors.gray400} />
         </View>
       ) : (
         <FlatList

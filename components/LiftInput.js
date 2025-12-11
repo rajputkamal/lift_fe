@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRightWidth: 1,
     borderRightColor: colors.gray300,
+    fontWeight: "500",
   },
   input: {
     flex: 1,

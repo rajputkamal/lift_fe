@@ -10,6 +10,7 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -21,26 +22,12 @@ import { colors } from "../constants/colors";
 export default function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [number, setNumber] = useState("");
-  const [error, setError] = useState("");
   const inputRef = useRef(null);
 
-  const numberChangeHandler = (num) => {
-    setNumber(num);
-
-    if (num.length > 0 && num.length < 10) {
-      setError("Mobile number must be 10 digits");
-    } else {
-      setError("");
-    }
-  };
+  const numberChangeHandler = (num) => setNumber(num);
 
   const onContinue = async () => {
     setLoading(true);
-    if (number.length !== 10) {
-      setError("Mobile number must be 10 digits.");
-      setLoading(false);
-      return;
-    }
     const result = await fetchOTP(number);
     if (result?.message === "OTP sent successfully") {
       navigation.navigate("otp", { phoneNumber: number });
@@ -69,7 +56,6 @@ export default function Login({ navigation }) {
         >
           <View style={styles.container}>
             <Card>
-              {/* <Title mainHeading>Welcome! Let’s get you riding.</Title> */}
               <Title mainHeading>
                 Share your route. Save your cost.{" "}
                 <Text style={styles.highlightedText}>Ride together.</Text>{" "}
@@ -89,9 +75,16 @@ export default function Login({ navigation }) {
                 onPressCloseIcon={() => setNumber("")}
               />
 
-              {error.length > 0 && (
-                <Text style={styles.errorText}>{error}</Text>
-              )}
+              <View style={styles.infoContainer}>
+                <Ionicons
+                  name="information-circle-outline"
+                  size={14}
+                  color={colors.orange500}
+                />
+                <Text style={styles.infoText}>
+                  Please enter a valid 10-digit mobile number.
+                </Text>
+              </View>
 
               <Button
                 onPress={onContinue}
@@ -118,10 +111,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     justifyContent: "center",
   },
-  errorText: {
-    color: colors.orange500,
+  infoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
+  },
+  infoText: {
+    color: colors.orange500,
     fontSize: 12,
+    marginLeft: 4,
   },
   highlightedText: {
     color: colors.blue600,

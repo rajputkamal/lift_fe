@@ -61,6 +61,26 @@ export default function Otp({ route, navigation }) {
     setLoading(false);
   };
 
+  const handleKeyPress = (e, index) => {
+    if (e.nativeEvent.key === "Backspace") {
+      // If current box has a value → just clear it
+      if (code[index] !== "") {
+        const newCode = [...code];
+        newCode[index] = "";
+        setCode(newCode);
+        return;
+      }
+
+      // If empty → move focus to previous box
+      if (index > 0) {
+        inputs.current[index - 1].focus();
+        const newCode = [...code];
+        newCode[index - 1] = "";
+        setCode(newCode);
+      }
+    }
+  };
+
   const isDisabled = code.some((digit) => digit === "");
 
   useEffect(() => {
@@ -71,7 +91,15 @@ export default function Otp({ route, navigation }) {
   }, []);
 
   const handleResend = async () => {
-    await fetchOTP(phoneNumber);
+    setLoading(true);
+    const result = await fetchOTP(phoneNumber);
+    if (result?.message !== "OTP sent successfully") {
+      Alert.alert(
+        "Something went wrong!",
+        "Failed to send OTP. Please try again."
+      );
+    }
+    setLoading(false);
     setTimeLeft(180);
   };
 
@@ -109,6 +137,7 @@ export default function Otp({ route, navigation }) {
                     maxLength={1}
                     value={digit}
                     onChangeText={(text) => handleChange(text, index)}
+                    onKeyPress={(e) => handleKeyPress(e, index)}
                   />
                 ))}
               </View>
