@@ -53,4 +53,5 @@ eas login
 eas build:configure
 eas build -p android --profile preview
 eas build -p ios --profile preview
+eas build -p ios --profile preview
 ```
