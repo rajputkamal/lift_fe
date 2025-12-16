@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   View,
   TextInput,
@@ -15,6 +16,8 @@ export default function LiftInput({
   onPressCloseIcon,
   ...props
 }) {
+  const [isTyping, setIsTyping] = useState(false);
+
   return (
     <View style={styles.inputContainer}>
       {keyboardType === "numeric" && (
@@ -22,10 +25,24 @@ export default function LiftInput({
       )}
       <TextInput
         style={styles.input}
-        onChangeText={onChangeText}
+        onChangeText={(text) => {
+          setIsTyping(true);
+          onChangeText(text);
+        }}
         keyboardType={keyboardType}
         autoCorrect={false}
         spellCheck={false}
+        multiline={false}
+        numberOfLines={1}
+        textAlign="left"
+        textAlignVertical="center"
+        onFocus={() => setIsTyping(true)}
+        onBlur={() => setIsTyping(false)}
+        selection={
+          !isTyping && props.value?.length > 0
+            ? { start: 0, end: 0 }
+            : undefined
+        }
         {...props}
       />
       {props.value?.length > 0 && (

@@ -28,7 +28,7 @@ export default function Home({ navigation }) {
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(new Date());
-  const [seats, setSeats] = useState(3);
+  const [seats, setSeats] = useState(1);
 
   const [suggestions, setSuggestions] = useState([]);
   const [origin, setOrigin] = useState("");
@@ -86,13 +86,10 @@ export default function Home({ navigation }) {
   };
 
   const onContinue = async () => {
-    if (!origin) {
-      return Alert.alert("Missing info", "Please enter your pick-up location.");
-    }
-    if (!destination) {
+    if (!user?.name) {
       return Alert.alert(
-        "Missing info",
-        "Please enter your drop off location."
+        "Complete Your Profile",
+        "To offer or book rides smoothly, we recommend adding your name to your profile."
       );
     }
 
@@ -114,7 +111,7 @@ export default function Home({ navigation }) {
       setOriginCoords(null);
       setDestinationCoords(null);
       setTime(new Date());
-      setSeats(3);
+      setSeats(1);
     } else {
       Alert.alert("Error", "Could not offer ride. Please try again later.");
     }
@@ -126,6 +123,16 @@ export default function Home({ navigation }) {
     if (field === "origin") setOrigin(text);
     else setDestination(text);
     fetchPlaces(text);
+  };
+
+  const closeIconHandler = (field) => {
+    if (field === "origin") {
+      setOrigin("");
+      setOriginCoords(null);
+    } else {
+      setDestination("");
+      setDestinationCoords(null);
+    }
   };
 
   useFocusEffect(
@@ -188,7 +195,7 @@ export default function Home({ navigation }) {
               onFocus={() => setActiveField("origin")}
               value={origin}
               placeholder="Your location"
-              onPressCloseIcon={() => setOrigin("")}
+              onPressCloseIcon={() => closeIconHandler("origin")}
             />
 
             <LiftInput
@@ -196,7 +203,7 @@ export default function Home({ navigation }) {
               onChangeText={(text) => onChangeTextHandler(text, "destination")}
               value={destination}
               placeholder="Where to?"
-              onPressCloseIcon={() => setDestination("")}
+              onPressCloseIcon={() => closeIconHandler("destination")}
             />
 
             <View style={styles.timeSeatsContainer}>
@@ -221,7 +228,7 @@ export default function Home({ navigation }) {
               </Button>
             </View>
           </Card>
-          <LiftSnackBar visible={!user?.name} />
+          {!user?.name && <LiftSnackBar visible={!user?.name} />}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

@@ -8,6 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as Application from "expo-application";
 
 import { colors } from "../constants/colors";
 import Card from "../components/Card";
@@ -96,7 +97,9 @@ export default function ProfileSettingsScreen({ navigation }) {
       <Card>
         <View>
           <Text style={styles.label}>App Version</Text>
-          <Text style={styles.value}>v1.0.0</Text>
+          <Text style={styles.value}>
+            v{Application.nativeApplicationVersion}
+          </Text>
         </View>
       </Card>
       <Card>
@@ -146,5 +149,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-  
 });

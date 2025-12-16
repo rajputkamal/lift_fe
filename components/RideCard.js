@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
   locationRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 6,
   },
   locationText: {
     fontSize: 14,
@@ -98,7 +97,7 @@ const styles = StyleSheet.create({
   detailsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 8,
+    marginVertical: 6,
   },
   price: {
     fontSize: 16,
