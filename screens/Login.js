@@ -10,7 +10,6 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -18,6 +17,7 @@ import LiftInput from "../components/LiftInput";
 import { fetchOTP } from "../utils/api";
 import Title from "../components/Title";
 import { colors } from "../constants/colors";
+import Info from "../components/Info";
 
 export default function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
@@ -75,16 +75,7 @@ export default function Login({ navigation }) {
                 onPressCloseIcon={() => setNumber("")}
               />
 
-              <View style={styles.infoContainer}>
-                <Ionicons
-                  name="information-circle-outline"
-                  size={14}
-                  color={colors.orange500}
-                />
-                <Text style={styles.infoText}>
-                  Please enter a valid 10-digit mobile number.
-                </Text>
-              </View>
+              <Info text="Please register with a valid 10-digit mobile number." />
 
               <Button
                 onPress={onContinue}
@@ -110,16 +101,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     justifyContent: "center",
-  },
-  infoContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  infoText: {
-    color: colors.orange500,
-    fontSize: 12,
-    marginLeft: 4,
   },
   highlightedText: {
     color: colors.blue600,

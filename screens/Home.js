@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -19,10 +19,13 @@ import TimePicker from "../components/TimePicker";
 import Seats from "../components/Seats";
 import LiftInput from "../components/LiftInput";
 import { requestRide } from "../utils/api";
+import UserContext from "../context/UserContext";
+import LiftSnackBar from "../components/LiftSnackbar";
 
 const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 export default function Home({ navigation }) {
+  const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(new Date());
   const [seats, setSeats] = useState(3);
@@ -218,6 +221,7 @@ export default function Home({ navigation }) {
               </Button>
             </View>
           </Card>
+          <LiftSnackBar visible={!user?.name} />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
