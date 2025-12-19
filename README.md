@@ -48,9 +48,15 @@ npm install -g eas-cli
 ```bash
 eas login
 ```
-+ To run build config commands
++ To run build config commands (preview mode)
 ```bash
 eas build:configure
 eas build -p android --profile preview
 eas build -p ios --profile preview
+```
+
++ To run build config commands (production mode)
+```bash
+eas build -p android --profile production
+eas build -p ios --profile production
 ```
