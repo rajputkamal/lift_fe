@@ -46,6 +46,7 @@ export default function Time({ time, setIsOlderRide }) {
 
   return (
     <Text style={styles.time}>
+     
       {dayString} | {hours}:{minutes}
     </Text>
   );

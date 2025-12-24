@@ -42,7 +42,7 @@ export default function Button({
 const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.purple600,
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 10,
     alignItems: "center",

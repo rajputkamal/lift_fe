@@ -1,6 +1,11 @@
 import { useContext, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  MapPin,
+  Flag,
+  IndianRupee,
+  EllipsisVertical,
+} from "lucide-react-native";
 
 import UserContext from "../context/UserContext";
 import { colors } from "../constants/colors";
@@ -35,18 +40,21 @@ export default function RideCard({ ride }) {
 
       <View style={styles.route}>
         <View style={styles.locationRow}>
-          <Ionicons name="location-outline" size={18} color={colors.primary} />
+          <MapPin size={18} color={colors.gray900} />
           <Text style={styles.locationText}>{ride.origin}</Text>
         </View>
-        <View style={styles.line} />
+        <EllipsisVertical size={18} color={colors.gray900} />
         <View style={styles.locationRow}>
-          <Ionicons name="flag-outline" size={18} color={colors.primary} />
+          <Flag size={18} color={colors.gray900} />
           <Text style={styles.locationText}>{ride.destination}</Text>
         </View>
       </View>
 
       <View style={styles.detailsRow}>
-        <Text style={styles.price}>₹{ride.price}</Text>
+        <Text style={styles.price}>
+          <IndianRupee size={14} strokeWidth={3} />
+          {ride.price}
+        </Text>
         <Time time={ride?.time} setIsOlderRide={setIsOlderRide} />
       </View>
       <CallUser
@@ -62,7 +70,6 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 4,
     gap: 8,
   },
   userName: {
@@ -75,7 +82,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   route: {
-    marginVertical: 8,
+    marginVertical: 6,
     paddingLeft: 4,
   },
   locationRow: {
@@ -87,17 +94,10 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     color: colors.gray900,
   },
-  line: {
-    height: 14,
-    width: 2,
-    backgroundColor: colors.gray400,
-    marginLeft: 8,
-    marginBottom: 6,
-  },
   detailsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 6,
+    marginBottom: 4,
   },
   price: {
     fontSize: 16,

@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import Fontisto from "@expo/vector-icons/Fontisto";
+import { CarFront } from "lucide-react-native";
 
 import RideCard from "../components/RideCard";
 import Title from "../components/Title";
@@ -51,7 +51,7 @@ export default function AvailableRides() {
           <Title subHeading>
             No rides found. Try refreshing or check again later.
           </Title>
-          <Fontisto name="car" size={36} color={colors.gray400} />
+          <CarFront size={36} color={colors.gray400} />
         </View>
       ) : (
         <FlatList

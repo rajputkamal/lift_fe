@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import Fontisto from "@expo/vector-icons/Fontisto";
+import { CircleX } from "lucide-react-native";
 
 import { colors } from "../constants/colors";
 
@@ -47,7 +47,7 @@ export default function LiftInput({
       />
       {props.value?.length > 0 && (
         <TouchableOpacity style={styles.icon} onPress={onPressCloseIcon}>
-          <Fontisto name="close" size={18} color={colors.gray400} />
+          <CircleX size={18} color={colors.gray400} />
         </TouchableOpacity>
       )}
     </View>
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 8,
     borderWidth: 1,
     borderColor: colors.gray300,
     borderRadius: 10,
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    paddingVertical: 10,
+    paddingVertical: 8,
     paddingHorizontal: 12,
     color: colors.gray900,
   },

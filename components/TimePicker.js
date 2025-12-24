@@ -46,6 +46,7 @@ export default function TimePicker({ time, setTime }) {
           is24Hour={true}
           display="default"
           onChange={onChange}
+          style={styles.dateTimePicker}
         />
       )}
     </View>
@@ -58,13 +59,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   timeButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
     backgroundColor: colors.gray200,
     borderRadius: 50,
   },
   timeText: {
-    fontSize: 16,
+    fontSize: 14,
     color: colors.gray900,
+  },
+  dateTimePicker: {
+    paddingVertical: 4,
+    paddingHorizontal: 10,
   },
 });

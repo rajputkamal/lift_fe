@@ -1,18 +1,11 @@
 import { View, Image, StyleSheet, Text } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { CircleUserRound } from "lucide-react-native";
 
 import { colors } from "../constants/colors";
 
 export default function Avatar({ uri, name, size = 42 }) {
   const getInitials = (fullName) => {
-    if (!fullName)
-      return (
-        <Ionicons
-          name="person-circle-outline"
-          size={24}
-          color={colors.gray900}
-        />
-      );
+    if (!fullName) return <CircleUserRound size={24} color={colors.gray900} />;
     const parts = fullName.trim().split(" ");
     const first = parts[0]?.[0]?.toUpperCase() || "";
     const last =

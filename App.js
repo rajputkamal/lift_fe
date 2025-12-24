@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import { Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { House, User, CarFront } from "lucide-react-native";
 
 import { UserContextProvider } from "./context/UserContext";
 // Screens
@@ -25,13 +25,13 @@ function MainTabs() {
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarIcon: ({ color, size }) => {
-            let iconName;
-
-            if (route.name === "Map") iconName = "home-outline";
-            else if (route.name === "Rides") iconName = "car-outline";
-            else if (route.name === "Profile") iconName = "person-outline";
-
-            return <Ionicons name={iconName} size={size} color={color} />;
+            if (route.name === "Map") {
+              return <House color={color} size={size} />;
+            } else if (route.name === "Rides") {
+              return <CarFront color={color} size={size} />;
+            } else if (route.name === "Profile") {
+              return <User color={color} size={size} />;
+            }
           },
         })}
       >

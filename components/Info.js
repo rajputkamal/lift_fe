@@ -1,16 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Info as InfoIcon } from "lucide-react-native";
 
 import { colors } from "../constants/colors";
 
 export default function Info({ text }) {
   return (
     <View style={styles.infoContainer}>
-      <Ionicons
-        name="information-circle-outline"
-        size={14}
-        color={colors.orange500}
-      />
+      <InfoIcon size={12} color={colors.gray400} />
       <Text style={styles.infoText}>{text}</Text>
     </View>
   );
@@ -23,7 +19,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   infoText: {
-    color: colors.orange500,
+    color: colors.gray400,
     fontSize: 12,
     marginLeft: 4,
   },

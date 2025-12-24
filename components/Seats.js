@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { Minus, Plus } from "lucide-react-native";
 
 import { colors } from "../constants/colors";
 
@@ -19,21 +20,26 @@ export default function Seats({ seats, setSeats }) {
     if (seats > 1) {
       const newSeats = seats - 1;
       setSeats(newSeats);
-    } else {
-      Alert.alert("Minimum seats reached!", "You must have at least 1 seat.");
     }
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={decrement}>
-        <Text style={styles.text}>-</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={decrement}
+        disabled={seats === 1}
+      >
+        <Minus
+          color={seats === 1 ? colors.gray400 : colors.gray900}
+          size={18}
+        />
       </TouchableOpacity>
 
       <Text style={styles.text}>{seats}</Text>
 
       <TouchableOpacity style={styles.button} onPress={increment}>
-        <Text style={styles.text}>+</Text>
+        <Plus color={colors.gray900} size={18} />
       </TouchableOpacity>
     </View>
   );
@@ -44,13 +50,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: 120,
+    width: 96,
     paddingHorizontal: 8,
-    marginVertical: 8,
   },
   button: {
-    width: 32,
-    height: 32,
+    width: 26,
+    height: 26,
     borderRadius: 50,
     backgroundColor: colors.gray200,
     alignItems: "center",
@@ -58,6 +63,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.gray900,
-    fontSize: 18,
+    fontSize: 16,
   },
 });

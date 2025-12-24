@@ -1,10 +1,21 @@
-import { Alert, Linking, Platform, Text, View, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+
+import {
+  Alert,
+  Linking,
+  Platform,
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { Phone, ClipboardCopy } from "lucide-react-native";
 
 import Button from "./Button";
 import { colors } from "../constants/colors";
 
 export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
+  const [callNotSupported, setCallNotSupported] = useState(false);
   const handleCallUser = async (phoneNumber) => {
     if (isOlderRide) {
       Alert.alert(
@@ -30,6 +41,7 @@ export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
           "Calling not supported",
           "Your device cannot make phone calls."
         );
+        setCallNotSupported(true);
         return;
       }
 
@@ -45,11 +57,7 @@ export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
   return (
     <Button onPress={() => handleCallUser(phoneNumber)} disabled={isYourRide}>
       <View style={styles.buttonContent}>
-        <Ionicons
-          name="call-outline"
-          size={18}
-          color={isYourRide ? colors.gray400 : colors.white}
-        />
+        <Phone size={18} color={isYourRide ? colors.gray400 : colors.white} />
         <Text
           style={{
             color: isYourRide ? colors.gray400 : colors.white,
@@ -58,6 +66,20 @@ export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
         >
           Call
         </Text>
+        {callNotSupported && (
+          <View style={styles.buttonContent}>
+            <ClipboardCopy size={18} color={colors.white} />
+            <Text style={{ color: colors.white, fontSize: 16 }}>
+              {/* +91 {phoneNumber} */}
+              Copy Phone Number
+            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                console.log("Copy phone number", `+91 ${phoneNumber}`)
+              }
+            ></TouchableOpacity>
+          </View>
+        )}
       </View>
     </Button>
   );

@@ -27,14 +27,22 @@ export default function Login({ navigation }) {
   const numberChangeHandler = (num) => setNumber(num);
 
   const onContinue = async () => {
+    if (isNaN(number) || !/^[6-9]\d{9}$/.test(number)) {
+      Alert.alert(
+        "Invalid Number.",
+        "Please enter a valid 10-digit mobile number."
+      );
+      return;
+    }
     setLoading(true);
     const result = await fetchOTP(number);
+    console.log("OTP API response:", result);
     if (result?.message === "OTP sent successfully") {
       navigation.navigate("otp", { phoneNumber: number });
     } else {
       Alert.alert(
-        "Something went wrong!",
-        "Failed to send OTP. Please try again."
+        "Something went wrong.",
+        "Failed to send OTP. Please try again with a valid 10-digit mobile number."
       );
     }
     setLoading(false);
@@ -75,7 +83,7 @@ export default function Login({ navigation }) {
                 onPressCloseIcon={() => setNumber("")}
               />
 
-              <Info text="Please register with a valid 10-digit mobile number." />
+              <Info text="We’ll send you a one-time password (OTP) to verify." />
 
               <Button
                 onPress={onContinue}

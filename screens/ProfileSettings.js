@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Pencil, Check } from "lucide-react-native";
 import * as Application from "expo-application";
 
 import { colors } from "../constants/colors";
@@ -16,32 +17,52 @@ import Title from "../components/Title";
 import { deleteToken } from "../utils/identity";
 import { updateProfile } from "../utils/api";
 import UserContext from "../context/UserContext";
-import CopyRight from "../components/CopyRight";
+import Footer from "../components/Footer";
 
 export default function ProfileSettingsScreen({ navigation }) {
   const { user, setUser } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState(user?.name || "");
   const [editing, setEditing] = useState(false);
 
+  const nameChangeHandler = (text) => setName(text);
+
   const handleSave = async () => {
-    if (name.trim().length === 0) {
+    const trimmed = name.trim();
+    const hasInvalidChars = /[^a-zA-Z\s]/.test(trimmed);
+
+    if (trimmed.length === 0) {
       Alert.alert("Invalid Name", "Name cannot be empty.");
       return;
     }
-
-    const result = await updateProfile({ name });
-    if (!result?.message) {
-      Alert.alert("Error", "Failed to update profile. Please try again.");
+    if (trimmed.length > 32) {
+      Alert.alert("Invalid Name", "Name cannot exceed 32 characters.");
       return;
-    } else {
+    }
+    if (hasInvalidChars) {
+      Alert.alert("Invalid Name", "Name cannot contain special characters.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const result = await updateProfile({ name: trimmed });
+      if (!result || !result.user) {
+        Alert.alert("Error", "Failed to update profile. Please try again.");
+        return;
+      }
       setUser({ ...user, name: result.user.name });
       Alert.alert(
         "Profile Updated!",
         "Your name has been updated successfully."
       );
+      setEditing(false);
+    } catch (err) {
+      Alert.alert("Error", "Failed to update profile. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    setEditing(false);
   };
 
   const logout = async () => {
@@ -64,36 +85,40 @@ export default function ProfileSettingsScreen({ navigation }) {
               <TextInput
                 style={styles.input}
                 value={name}
-                onChangeText={(text) => setName(text)}
+                onChangeText={nameChangeHandler}
                 autoFocus
                 placeholder="Enter your name"
                 placeholderTextColor={colors.gray400}
                 autoCorrect={false}
+                maxLength={32}
               />
             ) : (
               <Text style={styles.value}>{user?.name ? user?.name : "NA"}</Text>
             )}
           </View>
 
-          <TouchableOpacity onPress={() => setEditing(!editing)}>
-            <Ionicons
-              name={editing ? "checkmark-outline" : "pencil-outline"}
-              size={22}
-              color={colors.purple600}
-              style={{ padding: 4 }}
+          {loading ? (
+            <ActivityIndicator size="small" color={colors.gray300} />
+          ) : (
+            <TouchableOpacity
               onPress={editing ? handleSave : () => setEditing(true)}
-            />
-          </TouchableOpacity>
+            >
+              {editing ? (
+                <Check size={22} color={colors.purple600} />
+              ) : (
+                <Pencil size={18} color={colors.purple600} />
+              )}
+            </TouchableOpacity>
+          )}
         </View>
       </Card>
 
       <Card>
         <View>
           <Text style={styles.label}>Mobile</Text>
-          <Text style={styles.value}>{user?.phoneNumber}</Text>
+          <Text style={styles.value}>+91 {user?.phoneNumber}</Text>
         </View>
       </Card>
-
       <Card>
         <View>
           <Text style={styles.label}>App Version</Text>
@@ -107,7 +132,7 @@ export default function ProfileSettingsScreen({ navigation }) {
           <Text style={styles.logout}>Logout</Text>
         </TouchableOpacity>
       </Card>
-      <CopyRight />
+      <Footer />
     </View>
   );
 }
@@ -133,16 +158,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.gray900,
+    width: 250,
+    textTransform: "capitalize",
   },
   input: {
     fontSize: 16,
     fontWeight: "600",
     color: colors.gray900,
     borderBottomWidth: 1,
+    paddingBottom: 4,
     borderBottomColor: colors.gray300,
-    paddingVertical: 2,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    width: 250,
   },
   logout: {
     color: colors.orange500,
