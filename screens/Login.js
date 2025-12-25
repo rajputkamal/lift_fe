@@ -36,7 +36,6 @@ export default function Login({ navigation }) {
     }
     setLoading(true);
     const result = await fetchOTP(number);
-    console.log("OTP API response:", result);
     if (result?.message === "OTP sent successfully") {
       navigation.navigate("otp", { phoneNumber: number });
     } else {

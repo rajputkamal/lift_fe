@@ -1,21 +1,15 @@
 import { useState } from "react";
 
-import {
-  Alert,
-  Linking,
-  Platform,
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { Alert, Linking, Platform, Text, View, StyleSheet } from "react-native";
 import { Phone, ClipboardCopy } from "lucide-react-native";
+import * as Clipboard from "expo-clipboard";
 
 import Button from "./Button";
 import { colors } from "../constants/colors";
 
 export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
   const [callNotSupported, setCallNotSupported] = useState(false);
+
   const handleCallUser = async (phoneNumber) => {
     if (isOlderRide) {
       Alert.alert(
@@ -47,6 +41,7 @@ export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
 
       await Linking.openURL(url);
     } catch (error) {
+      setCallNotSupported(true);
       Alert.alert(
         "Call failed",
         "Unable to open dialer. Please call manually."
@@ -54,32 +49,35 @@ export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
     }
   };
 
+  const handleCopy = async () => {
+    await Clipboard.setStringAsync(`+91 ${phoneNumber}`);
+    Alert.alert("Copied!", "Phone number copied to clipboard.");
+  };
+
   return (
-    <Button onPress={() => handleCallUser(phoneNumber)} disabled={isYourRide}>
+    <Button
+      onPress={
+        callNotSupported ? handleCopy : () => handleCallUser(phoneNumber)
+      }
+      disabled={isYourRide}
+    >
       <View style={styles.buttonContent}>
-        <Phone size={18} color={isYourRide ? colors.gray400 : colors.white} />
+        {callNotSupported ? (
+          <ClipboardCopy
+            size={18}
+            color={isYourRide ? colors.gray400 : colors.white}
+          />
+        ) : (
+          <Phone size={18} color={isYourRide ? colors.gray400 : colors.white} />
+        )}
         <Text
           style={{
             color: isYourRide ? colors.gray400 : colors.white,
             fontSize: 16,
           }}
         >
-          Call
+          {callNotSupported ? "Copy Number" : "Call"}
         </Text>
-        {callNotSupported && (
-          <View style={styles.buttonContent}>
-            <ClipboardCopy size={18} color={colors.white} />
-            <Text style={{ color: colors.white, fontSize: 16 }}>
-              {/* +91 {phoneNumber} */}
-              Copy Phone Number
-            </Text>
-            <TouchableOpacity
-              onPress={() =>
-                console.log("Copy phone number", `+91 ${phoneNumber}`)
-              }
-            ></TouchableOpacity>
-          </View>
-        )}
       </View>
     </Button>
   );

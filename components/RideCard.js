@@ -55,7 +55,11 @@ export default function RideCard({ ride }) {
           <IndianRupee size={14} strokeWidth={3} />
           {ride.price}
         </Text>
-        <Time time={ride?.time} setIsOlderRide={setIsOlderRide} />
+        <Time
+          time={ride?.time}
+          setIsOlderRide={setIsOlderRide}
+          seats={ride?.seatsAvailable}
+        />
       </View>
       <CallUser
         phoneNumber={ride?.userNumber}

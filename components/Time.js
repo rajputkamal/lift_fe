@@ -3,7 +3,7 @@ import { Text, StyleSheet } from "react-native";
 
 import { colors } from "../constants/colors";
 
-export default function Time({ time, setIsOlderRide }) {
+export default function Time({ time, setIsOlderRide, seats }) {
   if (!time) return null;
 
   const rideDate = new Date(time);
@@ -44,10 +44,11 @@ export default function Time({ time, setIsOlderRide }) {
   const hours = rideDate.getHours().toString().padStart(2, "0");
   const minutes = rideDate.getMinutes().toString().padStart(2, "0");
 
+  const displaySeats = seats === 1 ? "1 seat" : `${seats} seats`;
+
   return (
     <Text style={styles.time}>
-     
-      {dayString} | {hours}:{minutes}
+      {dayString} | {hours}:{minutes} ({displaySeats})
     </Text>
   );
 }
