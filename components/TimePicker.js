@@ -42,7 +42,8 @@ export default function TimePicker({ time, setTime }) {
       {showPicker && (
         <DateTimePicker
           value={time}
-          mode="time"
+          mode="datetime"
+          minimumDate={new Date()}
           is24Hour={true}
           display="default"
           onChange={onChange}
@@ -57,6 +58,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
+    // backgroundColor: "red"
   },
   timeButton: {
     paddingVertical: 6,
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
     color: colors.gray900,
   },
   dateTimePicker: {
-    paddingVertical: 4,
-    paddingHorizontal: 10,
+    // paddingVertical: 4,
+    // paddingHorizontal: 10,
   },
 });

@@ -32,7 +32,7 @@ export default function RideCard({ ride }) {
             </Text>
             <Text style={styles.rating}>
               ⭐ {ride?.rating ?? "4.8"} |{" "}
-              {ride?.vehicle ? ride.vehicle : "Vehicle info not available"}
+              {ride?.vehicleNumber ? ride.vehicleNumber : "Vehicle info not available"}
             </Text>
           </View>
         </View>
@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 16,
     fontWeight: "600",
+    textTransform: "capitalize",
   },
   rating: {
     fontSize: 13,

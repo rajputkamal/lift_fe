@@ -6,7 +6,6 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Location from "expo-location";
@@ -21,6 +20,9 @@ import LiftInput from "../components/LiftInput";
 import { requestRide } from "../utils/api";
 import UserContext from "../context/UserContext";
 import LiftSnackBar from "../components/LiftSnackbar";
+import TabSwitcher from "../components/TabSwitcher";
+import PriceSelector from "../components/PriceSelector";
+import { calculatePrice } from "../utils/price";
 
 const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -37,6 +39,15 @@ export default function Home({ navigation }) {
   const [originCoords, setOriginCoords] = useState(null);
   const [destinationCoords, setDestinationCoords] = useState(null);
 
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [info, setInfo] = useState(null);
+  const [vehicle, setVehicle] = useState("");
+
+  // const priceData = calculatePrice(origin, destination, vehicle);
+
+  console.log("vehicle", vehicle);
+
   const fetchPlaces = async (input) => {
     if (!input.trim()) {
       setSuggestions([]);
@@ -50,7 +61,7 @@ export default function Home({ navigation }) {
       const data = await response.json();
       setSuggestions(data.predictions || []);
     } catch (error) {
-      Alert.alert("Error fetching places", error.message);
+      setError("Error fetching places");
     }
   };
 
@@ -69,7 +80,7 @@ export default function Home({ navigation }) {
         else setDestinationCoords({ latitude: lat, longitude: lng });
       }
     } catch (err) {
-      Alert.alert("Error getting coordinates", err.message);
+      setError("Error getting coordinates");
     }
   };
 
@@ -87,10 +98,10 @@ export default function Home({ navigation }) {
 
   const onContinue = async () => {
     if (!user?.name) {
-      return Alert.alert(
-        "Complete Your Profile",
+      setInfo(
         "To offer or book rides smoothly, we recommend adding your name to your profile."
       );
+      return;
     }
 
     setLoading(true);
@@ -104,16 +115,19 @@ export default function Home({ navigation }) {
     });
 
     if (result?.message) {
-      Alert.alert("Success", "Your ride has been offered successfully.");
-      navigation.navigate("Rides");
+      setSuccess("Your ride has been offered successfully.");
       setOrigin("");
       setDestination("");
       setOriginCoords(null);
       setDestinationCoords(null);
       setTime(new Date());
       setSeats(1);
+      setTimeout(() => {
+        setSuccess(null);
+        navigation.navigate("Rides");
+      }, 1000);
     } else {
-      Alert.alert("Error", "Could not offer ride. Please try again later.");
+      setError("Could not offer ride. Please try again later.");
     }
     setLoading(false);
   };
@@ -133,6 +147,13 @@ export default function Home({ navigation }) {
       setDestination("");
       setDestinationCoords(null);
     }
+  };
+
+  const handleTabChange = (value) => {
+    if (value === "bike") {
+      setSeats(1);
+    }
+    setVehicle(value);
   };
 
   useFocusEffect(
@@ -189,6 +210,7 @@ export default function Home({ navigation }) {
             destinationCoords={destinationCoords}
           />
 
+          <TabSwitcher onChange={handleTabChange} />
           <Card style={{ paddingBottom: Platform.OS === "ios" ? 30 : 16 }}>
             <LiftInput
               onChangeText={(text) => onChangeTextHandler(text, "origin")}
@@ -206,10 +228,18 @@ export default function Home({ navigation }) {
               onPressCloseIcon={() => closeIconHandler("destination")}
             />
 
+           {/* {origin && destination &&   <PriceSelector
+              // minPrice={priceData.priceRange.min}
+              // maxPrice={priceData.priceRange.max}
+              // onPriceChange={(price) => setSelectedPrice(price)}
+            />} */}
+
             <View style={styles.timeSeatsContainer}>
               <TimePicker time={time} setTime={setTime} />
-              <Seats seats={seats} setSeats={setSeats} />
+              <Seats seats={seats} setSeats={setSeats} vehicle={vehicle} />
             </View>
+
+           
 
             {suggestions.length > 0 && (
               <SuggestionList
@@ -228,7 +258,25 @@ export default function Home({ navigation }) {
               </Button>
             </View>
           </Card>
-          {!user?.name && <LiftSnackBar visible={!user?.name} />}
+          <LiftSnackBar visible={!user?.name} />
+          <LiftSnackBar
+            visible={!!error}
+            type="error"
+            text={error}
+            onDismiss={() => setError(null)}
+          />
+          <LiftSnackBar
+            visible={!!success}
+            type="success"
+            text={success}
+            onDismiss={() => setSuccess(null)}
+          />
+          <LiftSnackBar
+            visible={!!info}
+            type="info"
+            text={info}
+            onDismiss={() => setInfo(null)}
+          />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -239,6 +287,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
+    paddingTop: 4,
   },
   timeSeatsContainer: {
     flexDirection: "row",

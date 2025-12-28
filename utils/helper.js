@@ -6,3 +6,10 @@ export const maskNumber = (number) => {
   const masked = "*".repeat(str.length - 5) + last3;
   return `+91${masked}`;
 };
+
+export const capitalizeWords = (str = "") =>
+  str
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");

@@ -1,18 +1,13 @@
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Minus, Plus } from "lucide-react-native";
 
 import { colors } from "../constants/colors";
 
-export default function Seats({ seats, setSeats }) {
+export default function Seats({ seats, setSeats, vehicle }) {
   const increment = () => {
     if (seats < 4) {
       const newSeats = seats + 1;
       setSeats(newSeats);
-    } else {
-      Alert.alert(
-        "Maximum seats reached!",
-        "You cannot have more than 4 seats."
-      );
     }
   };
 
@@ -32,14 +27,18 @@ export default function Seats({ seats, setSeats }) {
       >
         <Minus
           color={seats === 1 ? colors.gray400 : colors.gray900}
-          size={18}
+          size={16}
         />
       </TouchableOpacity>
 
       <Text style={styles.text}>{seats}</Text>
 
-      <TouchableOpacity style={styles.button} onPress={increment}>
-        <Plus color={colors.gray900} size={18} />
+      <TouchableOpacity
+        style={styles.button}
+        disabled={seats === 4 || vehicle === "bike"}
+        onPress={increment}
+      >
+        <Plus color={(seats === 4 || vehicle === 'bike') ? colors.gray400 : colors.gray900} size={16} />
       </TouchableOpacity>
     </View>
   );
@@ -50,8 +49,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: 96,
-    paddingHorizontal: 8,
+    gap: 6,
   },
   button: {
     width: 26,

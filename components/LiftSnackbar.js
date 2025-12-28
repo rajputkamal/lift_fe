@@ -1,20 +1,62 @@
-import { StyleSheet, Text } from "react-native";
+import { useEffect } from "react";
+
+import { StyleSheet, Text, View } from "react-native";
 import { Snackbar } from "react-native-paper";
 
 import { colors } from "../constants/colors";
+import { useKeyboardOpen } from "../hooks/useKeyboardOpen";
 
-export default function LiftSnackBar({ visible, text, type = "info" }) {
+export default function LiftSnackBar({
+  visible,
+  text,
+  type = "info",
+  onDismiss,
+  duration = 3000,
+  ...props
+}) {
+  const isKeyboardOpen = useKeyboardOpen();
+  useEffect(() => {
+    if (!visible) return;
+
+    const timer = setTimeout(() => {
+      onDismiss?.();
+    }, duration);
+
+    return () => clearTimeout(timer);
+  }, [visible, onDismiss, duration]);
+
+  if (!visible) return null;
   return (
-    <Snackbar visible={visible} style={[styles[`${type}Snackbar`]]}>
-      <Text style={styles.text}>
-        {text ||
-          "To offer or book rides smoothly, we recommend adding your name to your profile."}
-      </Text>
-    </Snackbar>
+    <View
+      style={[styles.snackbar, isKeyboardOpen ? styles.top : styles.bottom]}
+    >
+      <Snackbar
+        visible={visible}
+        style={[styles[`${type}Snackbar`], { borderRadius: 8 }]}
+        duration={duration}
+        {...props}
+      >
+        <Text style={styles.text}>
+          {text ||
+            "To offer or book rides smoothly, we recommend adding your name to your profile."}
+        </Text>
+      </Snackbar>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  snackbar: {
+    position: "absolute",
+    left: 8,
+    right: 8,
+  },
+  top: {
+    top: "25%",
+  },
+  bottom: {
+    bottom: 40,
+  },
   infoSnackbar: {
     backgroundColor: colors.orange500,
   },
