@@ -3,7 +3,7 @@ import { Minus, Plus } from "lucide-react-native";
 
 import { colors } from "../constants/colors";
 
-export default function Seats({ seats, setSeats, vehicle }) {
+export default function Seats({ seats, setSeats, vehicleType }) {
   const increment = () => {
     if (seats < 4) {
       const newSeats = seats + 1;
@@ -35,10 +35,10 @@ export default function Seats({ seats, setSeats, vehicle }) {
 
       <TouchableOpacity
         style={styles.button}
-        disabled={seats === 4 || vehicle === "bike"}
+        disabled={seats === 4 || vehicleType === "bike"}
         onPress={increment}
       >
-        <Plus color={(seats === 4 || vehicle === 'bike') ? colors.gray400 : colors.gray900} size={16} />
+        <Plus color={(seats === 4 || vehicleType === 'bike') ? colors.gray400 : colors.gray900} size={16} />
       </TouchableOpacity>
     </View>
   );

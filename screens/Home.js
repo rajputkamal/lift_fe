@@ -42,11 +42,9 @@ export default function Home({ navigation }) {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [info, setInfo] = useState(null);
-  const [vehicle, setVehicle] = useState("");
+  const [vehicleType, setVehicleType] = useState("car");
 
   // const priceData = calculatePrice(origin, destination, vehicle);
-
-  console.log("vehicle", vehicle);
 
   const fetchPlaces = async (input) => {
     if (!input.trim()) {
@@ -105,6 +103,7 @@ export default function Home({ navigation }) {
     }
 
     setLoading(true);
+
     const result = await requestRide({
       origin,
       destination,
@@ -112,6 +111,7 @@ export default function Home({ navigation }) {
       destinationCoords,
       time,
       seatsAvailable: seats,
+      vehicleType,
     });
 
     if (result?.message) {
@@ -147,13 +147,6 @@ export default function Home({ navigation }) {
       setDestination("");
       setDestinationCoords(null);
     }
-  };
-
-  const handleTabChange = (value) => {
-    if (value === "bike") {
-      setSeats(1);
-    }
-    setVehicle(value);
   };
 
   useFocusEffect(
@@ -210,7 +203,11 @@ export default function Home({ navigation }) {
             destinationCoords={destinationCoords}
           />
 
-          <TabSwitcher onChange={handleTabChange} />
+          <TabSwitcher
+            vehicleType={vehicleType}
+            setVehicleType={setVehicleType}
+            setSeats={setSeats}
+          />
           <Card style={{ paddingBottom: Platform.OS === "ios" ? 30 : 16 }}>
             <LiftInput
               onChangeText={(text) => onChangeTextHandler(text, "origin")}
@@ -228,7 +225,7 @@ export default function Home({ navigation }) {
               onPressCloseIcon={() => closeIconHandler("destination")}
             />
 
-           {/* {origin && destination &&   <PriceSelector
+            {/* {origin && destination &&   <PriceSelector
               // minPrice={priceData.priceRange.min}
               // maxPrice={priceData.priceRange.max}
               // onPriceChange={(price) => setSelectedPrice(price)}
@@ -236,10 +233,12 @@ export default function Home({ navigation }) {
 
             <View style={styles.timeSeatsContainer}>
               <TimePicker time={time} setTime={setTime} />
-              <Seats seats={seats} setSeats={setSeats} vehicle={vehicle} />
+              <Seats
+                seats={seats}
+                setSeats={setSeats}
+                vehicleType={vehicleType}
+              />
             </View>
-
-           
 
             {suggestions.length > 0 && (
               <SuggestionList

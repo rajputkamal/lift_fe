@@ -12,30 +12,34 @@ import { colors } from "../constants/colors";
 
 const TABS = [
   {
-    key: "bike",
-    label: "Bike",
-    icon: <Bike size={16} color={colors.gray900} />,
-  },
-  {
     key: "car",
     label: "Car",
     icon: <CarFront size={16} color={colors.gray900} />,
   },
+  {
+    key: "bike",
+    label: "Bike",
+    icon: <Bike size={16} color={colors.gray900} />,
+  },
 ];
 
-export default function TabSwitcher({ onChange }) {
-  const [activeTab, setActiveTab] = useState(TABS[0].key);
-
+export default function TabSwitcher({
+  vehicleType = "car",
+  setVehicleType,
+  setSeats,
+}) {
   const handlePress = (key) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setActiveTab(key);
-    onChange && onChange?.(key);
+    if (key === "bike") {
+      setSeats && setSeats(1);
+    }
+    setVehicleType(key);
   };
 
   return (
     <View style={styles.container}>
       {TABS.map((tab) => {
-        const isActive = activeTab === tab.key;
+        const isActive = vehicleType === tab.key;
 
         return (
           <TouchableOpacity

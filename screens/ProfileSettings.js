@@ -7,7 +7,7 @@ import {
   TextInput,
   ActivityIndicator,
 } from "react-native";
-import { Pencil, Check, CarFront, Bike } from "lucide-react-native";
+import { Pencil, Check } from "lucide-react-native";
 import * as Application from "expo-application";
 
 import { colors } from "../constants/colors";
@@ -22,6 +22,7 @@ import { capitalizeWords } from "../utils/helper";
 
 export default function ProfileSettingsScreen({ navigation }) {
   const { user, setUser } = useContext(UserContext);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -140,11 +141,10 @@ export default function ProfileSettingsScreen({ navigation }) {
         </View>
       </Card>
 
-      {/* car vs bike number  */}
       <Card>
         <View style={styles.nameContainer}>
           <View>
-            <Text style={styles.label}>Vehicle Information</Text>
+            <Text style={styles.label}>Vehicle Number</Text>
             {editingVehicle ? (
               <TextInput
                 style={styles.input}
@@ -157,16 +157,7 @@ export default function ProfileSettingsScreen({ navigation }) {
                 maxLength={32}
               />
             ) : (
-              <View style={styles.vehicleContainer}>
-                {user?.vehicleType === "car" ? (
-                  <CarFront size={22} color={colors.gray900} />
-                ) : (
-                  <Bike size={22} color={colors.gray900} />
-                )}
-                <Text style={styles.value}>
-                  {(vehicle || "").toUpperCase()}
-                </Text>
-              </View>
+              <Text style={styles.value}>{(vehicle || "").toUpperCase()}</Text>
             )}
           </View>
 
@@ -264,9 +255,5 @@ const styles = StyleSheet.create({
     color: colors.orange500,
     fontSize: 16,
     fontWeight: "600",
-  },
-  vehicleContainer: {
-    flexDirection: "row",
-    gap: 8,
   },
 });

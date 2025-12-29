@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { View, FlatList, StyleSheet, ActivityIndicator } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { CarFront } from "lucide-react-native";
@@ -14,6 +14,7 @@ export default function AvailableRides() {
   const [loading, setLoading] = useState(false);
   const [allRides, setAllRides] = useState([]);
   const [error, setError] = useState(null);
+  const [vehicleType, setVehicleType] = useState("car");
 
   const getAllRides = useCallback(async () => {
     setLoading(true);
@@ -26,10 +27,6 @@ export default function AvailableRides() {
     setLoading(false);
   }, []);
 
-  const handleTabChange = (value) => {
-    console.log("Ride type selected:", value);
-  };
-
   useFocusEffect(
     useCallback(() => {
       getAllRides();
@@ -37,14 +34,19 @@ export default function AvailableRides() {
     }, [getAllRides])
   );
 
+  const filteredRides = useMemo(
+    () => allRides.filter((r) => r.vehicleType === vehicleType),
+    [allRides, vehicleType]
+  );
+
   return (
     <View style={styles.container}>
-      <TabSwitcher onChange={handleTabChange} />
+      <TabSwitcher vehicleType={vehicleType} setVehicleType={setVehicleType} />
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.gray900} />
         </View>
-      ) : !loading && allRides.length === 0 ? (
+      ) : !loading && filteredRides.length === 0 ? (
         <View style={styles.loadingContainer}>
           <Title subHeading>
             No rides found. Try refreshing or check again later.
@@ -53,7 +55,7 @@ export default function AvailableRides() {
         </View>
       ) : (
         <FlatList
-          data={allRides}
+          data={filteredRides}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => <RideCard ride={item} />}
           showsVerticalScrollIndicator={false}
