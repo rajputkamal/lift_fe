@@ -1,75 +1,63 @@
 import { useState } from "react";
-import {
-  Platform,
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { CalendarDays } from "lucide-react-native";
 
 import { colors } from "../constants/colors";
 
-export default function TimePicker({ time, setTime }) {
-  const [showPicker, setShowPicker] = useState(false);
-  const [showText, setShowText] = useState(true);
+export default function TimePicker({ dateTime, setDateTime }) {
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const onChange = (_, selectedTime) => {
-    setShowPicker(Platform.OS === "ios");
-    if (selectedTime) setTime(selectedTime);
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
   };
 
-  const showTimePicker = () => {
-    setShowPicker(true);
-    if (Platform.OS === "ios") {
-      setShowText(false);
-    }
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
   };
 
-  const formattedTime = time.toLocaleTimeString([], {
+  const handleConfirm = (date) => {
+    setDateTime(date);
+    hideDatePicker();
+  };
+
+  const formattedDateTime = new Date(dateTime).toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
   });
 
   return (
     <View style={styles.container}>
-      {showText && (
-        <TouchableOpacity onPress={showTimePicker} style={styles.timeButton}>
-          <Text style={styles.timeText}>{formattedTime}</Text>
-        </TouchableOpacity>
-      )}
-
-      {showPicker && (
-        <DateTimePicker
-          value={time}
-          mode="time"
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-          style={styles.dateTimePicker}
-        />
-      )}
+      <TouchableOpacity onPress={showDatePicker}>
+        <CalendarDays size={20} color={colors.purple600} />
+      </TouchableOpacity>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="datetime"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+        minimumDate={new Date()}
+        isDarkModeEnabled
+      />
+      <Text style={styles.timeText}>{formattedDateTime}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-  },
-  timeButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    backgroundColor: colors.gray200,
-    borderRadius: 50,
+    gap: 8,
   },
   timeText: {
     fontSize: 14,
     color: colors.gray900,
-  },
-  dateTimePicker: {
-    paddingVertical: 4,
-    paddingHorizontal: 10,
+    fontWeight: "500",
   },
 });

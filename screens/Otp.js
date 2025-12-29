@@ -8,7 +8,6 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Keyboard,
-  Alert,
   Text,
 } from "react-native";
 
@@ -21,10 +20,12 @@ import Title from "../components/Title";
 import { saveToken } from "../utils/identity";
 import { fetchOTP } from "../utils/api";
 import { maskNumber } from "../utils/helper";
+import LiftSnackBar from "../components/LiftSnackbar";
 
 export default function Otp({ route, navigation }) {
   const inputs = useRef([]);
   const { phoneNumber } = route.params;
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(180);
   const [code, setCode] = useState(["", "", "", ""]);
@@ -53,10 +54,7 @@ export default function Otp({ route, navigation }) {
       await saveToken(result.token);
       navigation.navigate("map");
     } else {
-      Alert.alert(
-        "Invalid OTP",
-        "The OTP you entered is incorrect. Please try again."
-      );
+      setError("The OTP you entered is incorrect. Please try again.");
     }
     setLoading(false);
   };
@@ -94,10 +92,7 @@ export default function Otp({ route, navigation }) {
     setLoading(true);
     const result = await fetchOTP(phoneNumber);
     if (result?.message !== "OTP sent successfully") {
-      Alert.alert(
-        "Something went wrong!",
-        "Failed to send OTP. Please try again."
-      );
+      setError("Failed to send OTP. Please try again.");
     }
     setLoading(false);
     setTimeLeft(180);
@@ -157,6 +152,12 @@ export default function Otp({ route, navigation }) {
               />
             </Card>
           </View>
+          <LiftSnackBar
+            visible={!!error}
+            type="error"
+            text={error}
+            onDismiss={() => setError(null)}
+          />
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

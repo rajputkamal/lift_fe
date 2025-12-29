@@ -8,7 +8,6 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Keyboard,
-  Alert,
 } from "react-native";
 
 import Card from "../components/Card";
@@ -18,9 +17,11 @@ import { fetchOTP } from "../utils/api";
 import Title from "../components/Title";
 import { colors } from "../constants/colors";
 import Info from "../components/Info";
+import LiftSnackBar from "../components/LiftSnackbar";
 
 export default function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [number, setNumber] = useState("");
   const inputRef = useRef(null);
 
@@ -28,10 +29,7 @@ export default function Login({ navigation }) {
 
   const onContinue = async () => {
     if (isNaN(number) || !/^[6-9]\d{9}$/.test(number)) {
-      Alert.alert(
-        "Invalid Number.",
-        "Please enter a valid 10-digit mobile number."
-      );
+      setError("Invalid Number. Please enter a valid 10-digit mobile number.");
       return;
     }
     setLoading(true);
@@ -39,10 +37,7 @@ export default function Login({ navigation }) {
     if (result?.message === "OTP sent successfully") {
       navigation.navigate("otp", { phoneNumber: number });
     } else {
-      Alert.alert(
-        "Something went wrong.",
-        "Failed to send OTP. Please try again with a valid 10-digit mobile number."
-      );
+      setError("Failed to send OTP. Please try again.");
     }
     setLoading(false);
   };
@@ -93,6 +88,12 @@ export default function Login({ navigation }) {
               </Button>
             </Card>
           </View>
+          <LiftSnackBar
+            visible={!!error}
+            type="error"
+            text={error}
+            onDismiss={() => setError(null)}
+          />
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

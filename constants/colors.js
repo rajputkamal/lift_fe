@@ -9,6 +9,6 @@ export const colors = {
   blue600: "#007AFF", //Matches button, helps user see focus
   gray900: "#1E1E1E", //Titles & main labels primary
   gray400: "#9CA3AF", //Hints / placeholders / seconday text
-  green600: "#2E7D32", // success messages
-  red600: "#DC2626", // error messages
+  green600: "#16A34A", // success messages
+  red600: "#EF4444", // error messages
 };
