@@ -4,59 +4,79 @@ import Slider from "@react-native-community/slider";
 
 import { colors } from "../constants/colors";
 
-export default function PriceSelector({
-  minPrice = 40,
-  maxPrice = 100,
-  onPriceChange,
-}) {
+export default function PriceSelector({ minPrice, maxPrice, onPriceChange }) {
   const defaultPrice = Math.round((minPrice + maxPrice) / 2);
   const [price, setPrice] = useState(defaultPrice);
+  const [inputValue, setInputValue] = useState(String(defaultPrice));
 
   useEffect(() => {
     setPrice(defaultPrice);
+    setInputValue(String(defaultPrice));
   }, [minPrice, maxPrice]);
 
-  const handleInputChange = (value) => {
-    const numeric = Number(value.replace(/[^0-9]/g, ""));
-    const clamped = Math.min(Math.max(numeric || minPrice, minPrice), maxPrice);
+  const clamp = (v) => Math.min(Math.max(v, minPrice), maxPrice);
 
+  const handleSlider = (v) => {
+    setPrice(v);
+    setInputValue(String(v));
+    onPriceChange?.(v);
+  };
+  const handleInput = (text) => {
+    if (text === "") {
+      setInputValue("");
+      return;
+    }
+
+    if (!/^\d+$/.test(text)) return;
+
+    setInputValue(text);
+  };
+
+  const handleInputBlur = () => {
+    let numeric = Number(inputValue);
+
+    if (Number.isNaN(numeric)) {
+      numeric = minPrice;
+    }
+
+    const clamped = clamp(numeric);
     setPrice(clamped);
+    setInputValue(String(clamped));
     onPriceChange?.(clamped);
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.sliderWrapper}>
-        <Text style={styles.rangeText}>₹{minPrice}</Text>
-
-        <View style={styles.sliderContainer}>
+    <View style={styles.card}>
+      <View style={styles.row}>
+        <View style={styles.sliderCol}>
           <Slider
             minimumValue={minPrice}
             maximumValue={maxPrice}
             step={1}
             value={price}
-            onValueChange={(v) => {
-              setPrice(v);
-              onPriceChange?.(v);
-            }}
-            minimumTrackTintColor={colors.purple600}
-            maximumTrackTintColor={colors.gray900}
-            thumbTintColor={colors.purple600}
+            onValueChange={handleSlider}
+            // minimumTrackTintColor={colors.purple600}
+            // thumbTintColor={colors.purple600}
           />
+
+          <View style={styles.rangeRow}>
+            <Text style={styles.rangeText}>₹{minPrice} (min)</Text>
+            <Text style={styles.rangeText}>₹{maxPrice} (max)</Text>
+          </View>
         </View>
 
-        <Text style={styles.rangeText}>₹{maxPrice}</Text>
-      </View>
-
-      <View style={styles.inputContainer}>
-        <View style={styles.inputRow}>
-          <Text style={styles.currency}>₹</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            value={String(price)}
-            onChangeText={handleInputChange}
-          />
+        <View style={styles.inputCol}>
+          <View style={styles.inputBox}>
+            <Text style={styles.currency}>₹</Text>
+            <TextInput
+              value={inputValue}
+              onChangeText={handleInput}
+              onBlur={handleInputBlur}
+              keyboardType="numeric"
+              style={styles.input}
+              maxLength={4}
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -64,55 +84,59 @@ export default function PriceSelector({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
+  card: {
+    borderTopColor: colors.gray200,
+    borderTopWidth: 1,
+    marginBottom: 8,
   },
 
-  sliderWrapper: {
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  sliderCol: {
     flex: 7,
-    flexDirection: "row",
-    alignItems: "center",
+    paddingRight: 8,
   },
 
-  rangeText: {
-    fontSize: 12,
-    color: colors.gray900,
-    textAlign: "center",
-  },
-
-  sliderContainer: {
-    flex: 1,
-  },
-
-  inputContainer: {
+  inputCol: {
     flex: 3,
   },
 
-  inputRow: {
+  rangeRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: -4,
+  },
+
+  rangeText: {
+    fontSize: 11,
+    color: colors.gray900,
+  },
+
+  inputBox: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    height: 36,
     backgroundColor: colors.gray200,
     borderRadius: 8,
-    paddingHorizontal: 10,
   },
 
   currency: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
     color: colors.gray900,
     marginRight: 2,
-    marginLeft: -10,
   },
 
   input: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
     color: colors.gray900,
     textAlign: "center",
-    minWidth: 44,
     padding: 0,
+    minWidth: 36,
   },
 });

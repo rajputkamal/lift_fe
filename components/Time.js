@@ -17,7 +17,7 @@ export default function Time({ time, setIsOlderRide, seats }) {
   );
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  const diffDays = Math.round((today - rideDay) / (1000 * 60 * 60 * 24));
+  const diffDays = Math.floor((today - rideDay) / (1000 * 60 * 60 * 24));
 
   let dayString;
   if (diffDays === 0) {

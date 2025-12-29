@@ -1,4 +1,4 @@
-import { useState, useCallback, useContext } from "react";
+import { useState, useCallback, useContext, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -29,7 +29,7 @@ const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 export default function Home({ navigation }) {
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(new Date());
+  const [dateTime, setDateTime] = useState(new Date());
   const [seats, setSeats] = useState(1);
 
   const [suggestions, setSuggestions] = useState([]);
@@ -44,7 +44,9 @@ export default function Home({ navigation }) {
   const [info, setInfo] = useState(null);
   const [vehicleType, setVehicleType] = useState("car");
 
-  // const priceData = calculatePrice(origin, destination, vehicle);
+  const [priceRange, setPriceRange] = useState(null);
+  const [selectedPrice, setSelectedPrice] = useState(null);
+  const [distance, setDistance] = useState(0);
 
   const fetchPlaces = async (input) => {
     if (!input.trim()) {
@@ -109,8 +111,10 @@ export default function Home({ navigation }) {
       destination,
       originCoords,
       destinationCoords,
-      time,
+      time: dateTime,
       seatsAvailable: seats,
+      price: selectedPrice,
+      distance,
       vehicleType,
     });
 
@@ -120,8 +124,11 @@ export default function Home({ navigation }) {
       setDestination("");
       setOriginCoords(null);
       setDestinationCoords(null);
-      setTime(new Date());
+      setDateTime(new Date());
       setSeats(1);
+      setDistance(0);
+      setPriceRange(null);
+      setSelectedPrice(null);
       setTimeout(() => {
         setSuccess(null);
         navigation.navigate("Rides");
@@ -143,11 +150,35 @@ export default function Home({ navigation }) {
     if (field === "origin") {
       setOrigin("");
       setOriginCoords(null);
+      setPriceRange(null);
+      setSelectedPrice(null);
     } else {
       setDestination("");
       setDestinationCoords(null);
+      setPriceRange(null);
+      setSelectedPrice(null);
     }
   };
+
+  useEffect(() => {
+    if (originCoords && destinationCoords && vehicleType) {
+      (async () => {
+        const result = await calculatePrice(
+          originCoords,
+          destinationCoords,
+          vehicleType
+        );
+
+        const { distance, priceRange } = result;
+        setPriceRange(priceRange);
+        setDistance(distance);
+        const mid = Math.round(
+          (result.priceRange.min + result.priceRange.max) / 2
+        );
+        setSelectedPrice(mid);
+      })();
+    }
+  }, [originCoords, destinationCoords, vehicleType]);
 
   useFocusEffect(
     useCallback(() => {
@@ -191,6 +222,12 @@ export default function Home({ navigation }) {
     }, [])
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      setDateTime(new Date());
+    }, [])
+  );
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -225,20 +262,22 @@ export default function Home({ navigation }) {
               onPressCloseIcon={() => closeIconHandler("destination")}
             />
 
-            {/* {origin && destination &&   <PriceSelector
-              // minPrice={priceData.priceRange.min}
-              // maxPrice={priceData.priceRange.max}
-              // onPriceChange={(price) => setSelectedPrice(price)}
-            />} */}
-
             <View style={styles.timeSeatsContainer}>
-              <TimePicker time={time} setTime={setTime} />
+              <TimePicker dateTime={dateTime} setDateTime={setDateTime} />
               <Seats
                 seats={seats}
                 setSeats={setSeats}
                 vehicleType={vehicleType}
               />
             </View>
+
+            {priceRange && (
+              <PriceSelector
+                minPrice={priceRange.min}
+                maxPrice={priceRange.max}
+                onPriceChange={setSelectedPrice}
+              />
+            )}
 
             {suggestions.length > 0 && (
               <SuggestionList
