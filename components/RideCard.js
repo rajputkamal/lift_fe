@@ -8,7 +8,7 @@ import {
 } from "lucide-react-native";
 
 import UserContext from "../context/UserContext";
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 import Card from "./Card";
 import Avatar from "./Avatar";
 import CallUser from "./CallUser";
@@ -40,12 +40,12 @@ export default function RideCard({ ride }) {
 
       <View style={styles.route}>
         <View style={styles.locationRow}>
-          <MapPin size={18} color={colors.gray900} />
+          <MapPin size={18} color={theme.color.gray900} />
           <Text style={styles.locationText}>{ride.origin}</Text>
         </View>
-        <EllipsisVertical size={18} color={colors.gray900} />
+        <EllipsisVertical size={18} color={theme.color.gray900} />
         <View style={styles.locationRow}>
-          <Flag size={18} color={colors.gray900} />
+          <Flag size={18} color={theme.color.gray900} />
           <Text style={styles.locationText}>{ride.destination}</Text>
         </View>
       </View>
@@ -77,36 +77,36 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   userName: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: theme.fontSize._16,
+    fontWeight: theme.weight.semi,
     textTransform: "capitalize",
   },
   rating: {
-    fontSize: 13,
-    color: colors.gray400,
+    fontSize: theme.fontSize._12,
+    color: theme.color.gray400,
     marginTop: 2,
   },
   route: {
     marginVertical: 6,
-    paddingLeft: 4,
+    paddingLeft: theme.spacing.xs,
   },
   locationRow: {
     flexDirection: "row",
     alignItems: "center",
   },
   locationText: {
-    fontSize: 14,
+    fontSize: theme.fontSize._14,
     marginLeft: 6,
-    color: colors.gray900,
+    color: theme.color.gray900,
   },
   detailsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 4,
+    marginBottom: theme.spacing.xs,
   },
   price: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: colors.primary,
+    fontSize: theme.fontSize._16,
+    fontWeight: theme.weight.semi,
+    color: theme.color.primary,
   },
 });

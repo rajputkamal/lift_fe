@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import Slider from "@react-native-community/slider";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
+import LiftSnackBar from "./LiftSnackbar";
 
 export default function PriceSelector({ minPrice, maxPrice, onPriceChange }) {
+  const [error, setError] = useState(null);
   const defaultPrice = Math.round((minPrice + maxPrice) / 2);
   const [price, setPrice] = useState(defaultPrice);
   const [inputValue, setInputValue] = useState(String(defaultPrice));
@@ -14,35 +16,43 @@ export default function PriceSelector({ minPrice, maxPrice, onPriceChange }) {
     setInputValue(String(defaultPrice));
   }, [minPrice, maxPrice]);
 
-  const clamp = (v) => Math.min(Math.max(v, minPrice), maxPrice);
-
   const handleSlider = (v) => {
     setPrice(v);
     setInputValue(String(v));
+    setError(null);
     onPriceChange?.(v);
   };
+
   const handleInput = (text) => {
     if (text === "") {
       setInputValue("");
+      setError(null);
+      onPriceChange?.(null);
       return;
     }
 
     if (!/^\d+$/.test(text)) return;
 
+    const numeric = Number(text);
     setInputValue(text);
+
+    if (numeric < minPrice || numeric > maxPrice) {
+      setError(`Price must be between ₹${minPrice} and ₹${maxPrice}`);
+      onPriceChange?.(null);
+      return;
+    }
+
+    setError(null);
+    setPrice(numeric);
+    onPriceChange?.(numeric);
   };
 
   const handleInputBlur = () => {
-    let numeric = Number(inputValue);
-
-    if (Number.isNaN(numeric)) {
-      numeric = minPrice;
+    if (inputValue === "") {
+      setInputValue(String(price));
+      setError(null);
+      onPriceChange?.(price);
     }
-
-    const clamped = clamp(numeric);
-    setPrice(clamped);
-    setInputValue(String(clamped));
-    onPriceChange?.(clamped);
   };
 
   return (
@@ -55,8 +65,8 @@ export default function PriceSelector({ minPrice, maxPrice, onPriceChange }) {
             step={1}
             value={price}
             onValueChange={handleSlider}
-            // minimumTrackTintColor={colors.purple600}
-            // thumbTintColor={colors.purple600}
+            // minimumTrackTintColor={theme.color.purple600}
+            // thumbTintColor={theme.color.purple600}
           />
 
           <View style={styles.rangeRow}>
@@ -78,6 +88,13 @@ export default function PriceSelector({ minPrice, maxPrice, onPriceChange }) {
             />
           </View>
         </View>
+        <LiftSnackBar
+          visible={!!error}
+          type="error"
+          text={error}
+          onDismiss={() => setError(null)}
+          duration={2000}
+        />
       </View>
     </View>
   );
@@ -85,9 +102,9 @@ export default function PriceSelector({ minPrice, maxPrice, onPriceChange }) {
 
 const styles = StyleSheet.create({
   card: {
-    borderTopColor: colors.gray200,
+    borderTopColor: theme.color.gray200,
     borderTopWidth: 1,
-    marginBottom: 8,
+    marginBottom: theme.spacing.sm,
   },
 
   row: {
@@ -97,7 +114,7 @@ const styles = StyleSheet.create({
 
   sliderCol: {
     flex: 7,
-    paddingRight: 8,
+    paddingRight: theme.spacing.sm,
   },
 
   inputCol: {
@@ -111,8 +128,8 @@ const styles = StyleSheet.create({
   },
 
   rangeText: {
-    fontSize: 11,
-    color: colors.gray900,
+    fontSize: theme.fontSize._12,
+    color: theme.color.gray900,
   },
 
   inputBox: {
@@ -120,21 +137,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     height: 36,
-    backgroundColor: colors.gray200,
-    borderRadius: 8,
+    backgroundColor: theme.color.gray200,
+    borderRadius: theme.borderRadius.sm,
   },
 
   currency: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: colors.gray900,
+    fontSize: theme.fontSize._16,
+    fontWeight: theme.weight.medium,
+    color: theme.color.gray900,
     marginRight: 2,
   },
 
   input: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: colors.gray900,
+    fontSize: theme.fontSize._16,
+    fontWeight: theme.weight.medium,
+    color: theme.color.gray900,
     textAlign: "center",
     padding: 0,
     minWidth: 36,

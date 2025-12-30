@@ -8,18 +8,18 @@ import {
 } from "react-native";
 import { CarFront, Bike } from "lucide-react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 const TABS = [
   {
     key: "car",
     label: "Car",
-    icon: <CarFront size={16} color={colors.gray900} />,
+    icon: <CarFront size={16} color={theme.color.gray900} />,
   },
   {
     key: "bike",
     label: "Bike",
-    icon: <Bike size={16} color={colors.gray900} />,
+    icon: <Bike size={16} color={theme.color.gray900} />,
   },
 ];
 
@@ -60,28 +60,27 @@ export default function TabSwitcher({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: colors.white,
-    borderRadius: 24,
-    padding: 4,
+    backgroundColor: theme.color.white,
+    borderRadius: theme.borderRadius.x_lg,
+    padding: theme.spacing.xs,
   },
   tab: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 24,
+    padding: theme.spacing.sm,
+    borderRadius: theme.borderRadius.x_lg,
     width: "50%",
   },
   activeTab: {
-    backgroundColor: colors.gray300,
+    backgroundColor: theme.color.gray300,
   },
   icon: {
-    marginRight: 6,
+    marginRight: theme.spacing.xs,
   },
   label: {
-    fontSize: 14,
-    color: colors.gray900,
-    fontWeight: "500",
+    fontSize: theme.fontSize._14,
+    color: theme.color.gray900,
+    fontWeight: theme.weight.medium,
   },
 });

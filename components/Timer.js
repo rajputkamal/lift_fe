@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 export default function Timer({ timeLeft, setTimeLeft, handleResend }) {
   const timerRef = useRef(null);
@@ -39,14 +39,14 @@ export default function Timer({ timeLeft, setTimeLeft, handleResend }) {
 
 const styles = StyleSheet.create({
   subtitle: {
-    color: colors.orange500,
-    fontSize: 14,
-    marginTop: 16,
+    color: theme.color.orange500,
+    fontSize: theme.fontSize._14,
+    marginTop: theme.spacing.lg,
     textAlign: "center",
-    fontWeight: "500",
+    fontWeight: theme.weight.medium,
   },
   resendText: {
-    color: colors.orange500,
-    fontWeight: "bold",
+    color: theme.color.orange500,
+    fontWeight: theme.weight.semi,
   },
 });

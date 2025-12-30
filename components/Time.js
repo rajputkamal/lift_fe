@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Text, StyleSheet } from "react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 export default function Time({ time, setIsOlderRide, seats }) {
   if (!time) return null;
@@ -55,8 +55,8 @@ export default function Time({ time, setIsOlderRide, seats }) {
 
 const styles = StyleSheet.create({
   time: {
-    fontSize: 13,
-    color: colors.orange500,
-    fontWeight: "500",
+    fontSize: theme.fontSize._12,
+    color: theme.color.orange500,
+    fontWeight: theme.weight.medium,
   },
 });

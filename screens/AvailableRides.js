@@ -6,7 +6,7 @@ import { CarFront } from "lucide-react-native";
 import RideCard from "../components/RideCard";
 import Title from "../components/Title";
 import { fetchAvailableRides } from "../utils/api";
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 import LiftSnackBar from "../components/LiftSnackbar";
 import TabSwitcher from "../components/TabSwitcher";
 
@@ -44,14 +44,14 @@ export default function AvailableRides() {
       <TabSwitcher vehicleType={vehicleType} setVehicleType={setVehicleType} />
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.gray900} />
+          <ActivityIndicator size="large" color={theme.color.gray900} />
         </View>
       ) : !loading && filteredRides.length === 0 ? (
         <View style={styles.loadingContainer}>
           <Title subHeading>
             No rides found. Try refreshing or check again later.
           </Title>
-          <CarFront size={36} color={colors.gray400} />
+          <CarFront size={36} color={theme.color.gray400} />
         </View>
       ) : (
         <FlatList
@@ -75,8 +75,8 @@ export default function AvailableRides() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.sm,
   },
   listContent: {
     paddingBottom: 30,

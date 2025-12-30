@@ -6,7 +6,7 @@ import {
   Linking,
 } from "react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 import CopyRight from "./CopyRight";
 
 const FOOTER_LINKS = [
@@ -49,12 +49,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   linkText: {
-    fontSize: 14,
-    color: colors.purple600,
+    fontSize: theme.fontSize._12,
+    color: theme.color.purple600,
     cursor: "pointer",
     textAlign: "center",
-    borderRightColor: colors.purple600,
+    borderRightColor: theme.color.purple600,
     borderRightWidth: 1,
-    paddingHorizontal: 4,
+    paddingHorizontal: theme.spacing.xs,
   },
 });

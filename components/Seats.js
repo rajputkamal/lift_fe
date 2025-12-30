@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Minus, Plus } from "lucide-react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 export default function Seats({ seats, setSeats, vehicleType }) {
   const increment = () => {
@@ -26,7 +26,7 @@ export default function Seats({ seats, setSeats, vehicleType }) {
         disabled={seats === 1}
       >
         <Minus
-          color={seats === 1 ? colors.gray400 : colors.gray900}
+          color={seats === 1 ? theme.color.gray400 : theme.color.gray900}
           size={16}
         />
       </TouchableOpacity>
@@ -38,7 +38,14 @@ export default function Seats({ seats, setSeats, vehicleType }) {
         disabled={seats === 4 || vehicleType === "bike"}
         onPress={increment}
       >
-        <Plus color={(seats === 4 || vehicleType === 'bike') ? colors.gray400 : colors.gray900} size={16} />
+        <Plus
+          color={
+            seats === 4 || vehicleType === "bike"
+              ? theme.color.gray400
+              : theme.color.gray900
+          }
+          size={16}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -54,13 +61,13 @@ const styles = StyleSheet.create({
   button: {
     width: 26,
     height: 26,
-    borderRadius: 50,
-    backgroundColor: colors.gray200,
+    borderRadius: theme.borderRadius.rounded,
+    backgroundColor: theme.color.gray200,
     alignItems: "center",
     justifyContent: "center",
   },
   text: {
-    color: colors.gray900,
-    fontSize: 16,
+    color: theme.color.gray900,
+    fontSize: theme.fontSize._16,
   },
 });

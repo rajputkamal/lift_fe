@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { CircleX } from "lucide-react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 export default function LiftInput({
   keyboardType = "default",
@@ -47,7 +47,7 @@ export default function LiftInput({
       />
       {props.value?.length > 0 && (
         <TouchableOpacity style={styles.icon} onPress={onPressCloseIcon}>
-          <CircleX size={18} color={colors.gray400} />
+          <CircleX size={18} color={theme.color.gray400} />
         </TouchableOpacity>
       )}
     </View>
@@ -58,29 +58,29 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: theme.spacing.sm,
     borderWidth: 1,
-    borderColor: colors.gray300,
-    borderRadius: 8,
+    borderColor: theme.color.gray300,
+    borderRadius: theme.borderRadius.sm,
     overflow: "hidden",
   },
   countryCode: {
-    fontSize: 16,
-    color: colors.gray900,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    fontSize: theme.fontSize._16,
+    color: theme.color.gray900,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
     borderRightWidth: 1,
-    borderRightColor: colors.gray300,
-    fontWeight: "500",
+    borderRightColor: theme.color.gray300,
+    fontWeight: theme.weight.medium,
   },
   input: {
     flex: 1,
-    fontSize: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    color: colors.gray900,
+    fontSize: theme.fontSize._16,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    color: theme.color.gray900,
   },
   icon: {
-    paddingHorizontal: 12,
+    paddingHorizontal: theme.spacing.md,
   },
 });

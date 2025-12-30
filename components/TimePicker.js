@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { CalendarDays } from "lucide-react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 export default function TimePicker({ dateTime, setDateTime }) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -33,7 +33,7 @@ export default function TimePicker({ dateTime, setDateTime }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={showDatePicker}>
-        <CalendarDays size={20} color={colors.purple600} />
+        <CalendarDays size={20} color={theme.color.purple600} />
       </TouchableOpacity>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   timeText: {
-    fontSize: 14,
-    color: colors.gray900,
-    fontWeight: "500",
+    fontSize: theme.fontSize._14,
+    color: theme.color.gray900,
+    fontWeight: theme.weight.medium,
   },
 });

@@ -11,7 +11,7 @@ import {
   Text,
 } from "react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 import Timer from "../components/Timer";
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -157,6 +157,7 @@ export default function Otp({ route, navigation }) {
             type="error"
             text={error}
             onDismiss={() => setError(null)}
+            duration={2000}
           />
         </ScrollView>
       </TouchableWithoutFeedback>
@@ -173,28 +174,28 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 16,
+    paddingHorizontal: theme.spacing.lg,
   },
   inputRow: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: theme.spacing.md,
     gap: 10,
   },
   inputBox: {
     borderWidth: 1,
-    borderColor: colors.gray300,
+    borderColor: theme.color.gray300,
     width: 48,
     height: 50,
     textAlign: "center",
     fontSize: 24,
-    marginHorizontal: 5,
-    borderRadius: 8,
-    color: colors.gray900,
+    marginHorizontal: theme.spacing.xs,
+    borderRadius: theme.borderRadius.sm,
+    color: theme.color.gray900,
   },
   maskedNumber: {
-    color: colors.gray900,
-    fontWeight: 500,
+    color: theme.color.gray900,
+    fontWeight: theme.weight.medium,
   },
 });

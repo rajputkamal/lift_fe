@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 export default function CopyRight() {
   return (
@@ -14,7 +14,7 @@ export default function CopyRight() {
 
 const styles = StyleSheet.create({
   label: {
-    fontSize: 14,
-    color: colors.gray400,
+    fontSize: theme.fontSize._12,
+    color: theme.color.gray400,
   },
 });

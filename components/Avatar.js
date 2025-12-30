@@ -1,11 +1,12 @@
 import { View, Image, StyleSheet, Text } from "react-native";
 import { CircleUserRound } from "lucide-react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 export default function Avatar({ uri, name, size = 42 }) {
   const getInitials = (fullName) => {
-    if (!fullName) return <CircleUserRound size={24} color={colors.gray900} />;
+    if (!fullName)
+      return <CircleUserRound size={24} color={theme.color.gray900} />;
     const parts = fullName.trim().split(" ");
     const first = parts[0]?.[0]?.toUpperCase() || "";
     const last =
@@ -46,7 +47,7 @@ export default function Avatar({ uri, name, size = 42 }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.gray200,
+    backgroundColor: theme.color.gray200,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
@@ -56,6 +57,6 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   initials: {
-    color: colors.gray900,
+    color: theme.color.gray900,
   },
 });

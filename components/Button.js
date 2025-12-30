@@ -1,6 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 export default function Button({
   children,
@@ -23,7 +28,7 @@ export default function Button({
       disabled={disabled}
     >
       {loading ? (
-        <ActivityIndicator size="small" color={colors.gray300} />
+        <ActivityIndicator size="small" color={theme.color.gray300} />
       ) : (
         <Text
           style={[
@@ -41,29 +46,29 @@ export default function Button({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.purple600,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
+    backgroundColor: theme.color.purple600,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.sm,
+    borderRadius: theme.borderRadius.sm,
     alignItems: "center",
   },
   buttonText: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: "600",
+    color: theme.color.white,
+    fontSize: theme.fontSize._16,
+    fontWeight: theme.weight.semi,
   },
   secondaryButton: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: colors.orange500,
+    borderColor: theme.color.orange500,
   },
   secondaryButtonText: {
-    color: colors.orange500,
+    color: theme.color.orange500,
   },
   secondaryDisabled: {
-    borderColor: colors.gray300,
+    borderColor: theme.color.gray300,
   },
   disabledText: {
-    color: colors.gray400,
+    color: theme.color.gray400,
   },
 });

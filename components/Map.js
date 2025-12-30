@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -34,7 +34,7 @@ export default function Map({ originCoords, destinationCoords }) {
           destination={destinationCoords}
           apikey={GOOGLE_MAPS_API_KEY}
           strokeWidth={4}
-          strokeColor={colors.blue600}
+          strokeColor={theme.color.blue600}
         />
       )}
     </MapView>

@@ -10,7 +10,7 @@ import {
 import { Pencil, Check } from "lucide-react-native";
 import * as Application from "expo-application";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 import Card from "../components/Card";
 import { deleteToken } from "../utils/identity";
 import { updateProfile } from "../utils/api";
@@ -112,7 +112,7 @@ export default function ProfileSettingsScreen({ navigation }) {
                 onChangeText={nameChangeHandler}
                 autoFocus
                 placeholder="Enter your name"
-                placeholderTextColor={colors.gray400}
+                placeholderTextColor={theme.color.gray400}
                 autoCorrect={false}
                 maxLength={32}
               />
@@ -122,7 +122,7 @@ export default function ProfileSettingsScreen({ navigation }) {
           </View>
 
           {loading && editingName ? (
-            <ActivityIndicator size="small" color={colors.gray300} />
+            <ActivityIndicator size="small" color={theme.color.gray300} />
           ) : (
             <TouchableOpacity
               onPress={
@@ -132,9 +132,9 @@ export default function ProfileSettingsScreen({ navigation }) {
               }
             >
               {editingName ? (
-                <Check size={22} color={colors.purple600} />
+                <Check size={22} color={theme.color.purple600} />
               ) : (
-                <Pencil size={18} color={colors.purple600} />
+                <Pencil size={18} color={theme.color.purple600} />
               )}
             </TouchableOpacity>
           )}
@@ -152,7 +152,7 @@ export default function ProfileSettingsScreen({ navigation }) {
                 onChangeText={(text) => setVehicle(text)}
                 autoFocus
                 placeholder="Vehcile type | Vehicle number"
-                placeholderTextColor={colors.gray400}
+                placeholderTextColor={theme.color.gray400}
                 autoCorrect={false}
                 maxLength={32}
               />
@@ -162,7 +162,7 @@ export default function ProfileSettingsScreen({ navigation }) {
           </View>
 
           {loading && editingVehicle ? (
-            <ActivityIndicator size="small" color={colors.gray300} />
+            <ActivityIndicator size="small" color={theme.color.gray300} />
           ) : (
             <TouchableOpacity
               onPress={
@@ -172,9 +172,9 @@ export default function ProfileSettingsScreen({ navigation }) {
               }
             >
               {editingVehicle ? (
-                <Check size={22} color={colors.purple600} />
+                <Check size={22} color={theme.color.purple600} />
               ) : (
-                <Pencil size={18} color={colors.purple600} />
+                <Pencil size={18} color={theme.color.purple600} />
               )}
             </TouchableOpacity>
           )}
@@ -221,8 +221,8 @@ export default function ProfileSettingsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingBottom: 8,
+    paddingHorizontal: theme.spacing.lg,
+    paddingBottom: theme.spacing.sm,
     alignItems: "center",
   },
   nameContainer: {
@@ -231,29 +231,29 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   label: {
-    fontSize: 14,
-    color: colors.gray400,
-    marginBottom: 4,
+    fontSize: theme.fontSize._14,
+    color: theme.color.gray400,
+    marginBottom: theme.spacing.xs,
   },
   value: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.gray900,
+    fontSize: theme.fontSize._16,
+    fontWeight: theme.weight.semi,
+    color: theme.color.gray900,
     width: 250,
     // textTransform: "capitalize",
   },
   input: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.gray900,
+    fontSize: theme.fontSize._16,
+    fontWeight: theme.weight.semi,
+    color: theme.color.gray900,
     borderBottomWidth: 1,
-    paddingBottom: 4,
-    borderBottomColor: colors.gray300,
+    paddingBottom: theme.spacing.xs,
+    borderBottomColor: theme.color.gray300,
     width: 250,
   },
   logout: {
-    color: colors.orange500,
-    fontSize: 16,
-    fontWeight: "600",
+    color: theme.color.orange500,
+    fontSize: theme.fontSize._16,
+    fontWeight: theme.weight.semi,
   },
 });

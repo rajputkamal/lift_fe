@@ -1,6 +1,6 @@
 import { Text, StyleSheet } from "react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 export default function Title({
   children,
@@ -25,19 +25,19 @@ export default function Title({
 const styles = StyleSheet.create({
   title: {
     fontSize: 20,
-    fontWeight: 600,
-    marginBottom: 8,
-    color: colors.gray900,
+    fontWeight: theme.weight.semi,
+    marginBottom: theme.spacing.sm,
+    color: theme.color.gray900,
     textAlign: "center",
   },
   mainHeading: {
     fontSize: 22,
-    fontWeight: 700,
+    fontWeight: theme.weight.bold,
   },
   subHeading: {
-    color: colors.gray400,
-    fontWeight: 400,
-    fontSize: 16,
+    color: theme.color.gray400,
+    fontWeight: theme.weight.regular,
+    fontSize: theme.fontSize._16,
     lineHeight: 22
   },
 });

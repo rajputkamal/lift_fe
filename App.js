@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { House, User, CarFront } from "lucide-react-native";
+import { LayoutGrid, User, CarFront } from "lucide-react-native";
 
 import { UserContextProvider } from "./context/UserContext";
 // Screens
@@ -26,7 +26,7 @@ function MainTabs() {
           headerShown: false,
           tabBarIcon: ({ color, size }) => {
             if (route.name === "Map") {
-              return <House color={color} size={size} />;
+              return <LayoutGrid color={color} size={size} />;
             } else if (route.name === "Rides") {
               return <CarFront color={color} size={size} />;
             } else if (route.name === "Profile") {

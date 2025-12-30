@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 import List from "./List";
 
 export default function SuggestionList({ suggestions, onPress }) {
@@ -31,17 +31,17 @@ export default function SuggestionList({ suggestions, onPress }) {
 const styles = StyleSheet.create({
   suggestionsContainer: {
     maxHeight: 180,
-    marginBottom: 12,
-    borderTopColor: colors.gray300,
+    marginBottom: theme.spacing.md,
+    borderTopColor: theme.color.gray300,
     borderTopWidth: 1,
     overflow: "hidden",
   },
 
   suggestionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 8,
-    marginTop: 8,
-    color: colors.gray900,
+    fontSize: theme.fontSize._16,
+    fontWeight: theme.weight.semi,
+    marginBottom: theme.spacing.sm,
+    marginTop: theme.spacing.sm,
+    color: theme.color.gray900,
   },
 });

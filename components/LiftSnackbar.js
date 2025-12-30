@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Snackbar } from "react-native-paper";
 
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 import { useKeyboardOpen } from "../hooks/useKeyboardOpen";
 
 export default function LiftSnackBar({
@@ -32,7 +32,10 @@ export default function LiftSnackBar({
     >
       <Snackbar
         visible={visible}
-        style={[styles[`${type}Snackbar`], { borderRadius: 8 }]}
+        style={[
+          styles[`${type}Snackbar`],
+          { borderRadius: theme.borderRadius.sm },
+        ]}
         duration={duration}
         {...props}
       >
@@ -58,15 +61,15 @@ const styles = StyleSheet.create({
     bottom: 40,
   },
   infoSnackbar: {
-    backgroundColor: colors.orange500,
+    backgroundColor: theme.color.orange500,
   },
   errorSnackbar: {
-    backgroundColor: colors.red600,
+    backgroundColor: theme.color.red600,
   },
   successSnackbar: {
-    backgroundColor: colors.green600,
+    backgroundColor: theme.color.green600,
   },
   text: {
-    color: colors.white,
+    color: theme.color.white,
   },
 });

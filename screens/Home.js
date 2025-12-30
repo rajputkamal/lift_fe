@@ -23,6 +23,7 @@ import LiftSnackBar from "../components/LiftSnackbar";
 import TabSwitcher from "../components/TabSwitcher";
 import PriceSelector from "../components/PriceSelector";
 import { calculatePrice } from "../utils/price";
+import { theme } from "../styles/theme";
 
 const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -289,7 +290,7 @@ export default function Home({ navigation }) {
             <View style={styles.buttonContainer}>
               <Button
                 onPress={onContinue}
-                disabled={!origin || !destination}
+                disabled={!origin || !destination || selectedPrice == null}
                 loading={loading}
               >
                 Offer Ride
@@ -324,13 +325,13 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 4,
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.xs,
   },
   timeSeatsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: theme.spacing.sm,
   },
 });

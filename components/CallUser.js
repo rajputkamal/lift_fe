@@ -5,7 +5,7 @@ import { Phone, ClipboardCopy } from "lucide-react-native";
 import * as Clipboard from "expo-clipboard";
 
 import Button from "./Button";
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 import LiftSnackBar from "./LiftSnackbar";
 
 export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
@@ -62,18 +62,18 @@ export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
           {callNotSupported ? (
             <ClipboardCopy
               size={18}
-              color={isYourRide ? colors.gray400 : colors.white}
+              color={isYourRide ? theme.color.gray400 : theme.color.white}
             />
           ) : (
             <Phone
               size={18}
-              color={isYourRide ? colors.gray400 : colors.white}
+              color={isYourRide ? theme.color.gray400 : theme.color.white}
             />
           )}
           <Text
             style={{
-              color: isYourRide ? colors.gray400 : colors.white,
-              fontSize: 16,
+              color: isYourRide ? theme.color.gray400 : theme.color.white,
+              fontSize: theme.fontSize._16,
             }}
           >
             {callNotSupported ? "Copy Number" : "Call"}

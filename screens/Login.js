@@ -15,7 +15,7 @@ import Button from "../components/Button";
 import LiftInput from "../components/LiftInput";
 import { fetchOTP } from "../utils/api";
 import Title from "../components/Title";
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 import Info from "../components/Info";
 import LiftSnackBar from "../components/LiftSnackbar";
 
@@ -93,6 +93,7 @@ export default function Login({ navigation }) {
             type="error"
             text={error}
             onDismiss={() => setError(null)}
+            duration={2000}
           />
         </ScrollView>
       </TouchableWithoutFeedback>
@@ -107,10 +108,10 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: theme.spacing.lg,
     justifyContent: "center",
   },
   highlightedText: {
-    color: colors.blue600,
+    color: theme.color.blue600,
   },
 });

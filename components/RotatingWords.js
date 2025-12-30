@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, Text, View, StyleSheet } from "react-native";
-import { colors } from "../constants/colors";
+import { theme } from "../styles/theme";
 
 const RotatingWords = () => {
   const words = ["Lift together.", "Save together.", "Ride together."];
@@ -39,10 +39,9 @@ const RotatingWords = () => {
 
 const styles = StyleSheet.create({
   animatedText: {
-    color: colors.blue600,
+    color: theme.color.blue600,
     fontSize: 22,
-    fontWeight: "600",
-    // marginTop: 10,
+    fontWeight: theme.weight.semi,
     textAlign: "center",
   },
 });
