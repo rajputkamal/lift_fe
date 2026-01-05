@@ -1,18 +1,22 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useContext } from "react";
 import { View, FlatList, StyleSheet, ActivityIndicator } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { CarFront } from "lucide-react-native";
 
 import RideCard from "../components/RideCard";
 import Title from "../components/Title";
-import { fetchAvailableRides } from "../utils/api";
+import { fetchAvailableRides, deleteRide } from "../apis/ride.js";
 import { theme } from "../styles/theme";
 import LiftSnackBar from "../components/LiftSnackbar";
 import TabSwitcher from "../components/TabSwitcher";
+import UserContext from "../context/UserContext.js";
 
-export default function AvailableRides() {
+export default function AvailableRides({ navigation }) {
+  const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
+  const [loadingRideDeletion, setLoadingRideDeletion] = useState(false);
   const [allRides, setAllRides] = useState([]);
+  const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
   const [vehicleType, setVehicleType] = useState("car");
 
@@ -27,6 +31,32 @@ export default function AvailableRides() {
     setLoading(false);
   }, []);
 
+  const onDeleteRide = async (rideId) => {
+    setLoadingRideDeletion(true);
+    try {
+      const result = await deleteRide(rideId);
+
+      if (result?.success) {
+        setAllRides((prevRides) =>
+          prevRides.filter((ride) => ride._id !== rideId)
+        );
+        setSuccess("Your ride has been deleted successfully.");
+      }
+    } catch (error) {
+      setError("Failed to delete ride. Please try again.");
+    } finally {
+      setLoadingRideDeletion(false);
+    }
+  };
+
+  const onUpdateRide = async (editableRide) => {
+    navigation.navigate({
+      name: "Map",
+      params: { editableRide },
+      merge: true,
+    });
+  };
+
   useFocusEffect(
     useCallback(() => {
       getAllRides();
@@ -34,14 +64,25 @@ export default function AvailableRides() {
     }, [getAllRides])
   );
 
-  const filteredRides = useMemo(
-    () => allRides.filter((r) => r.vehicleType === vehicleType),
-    [allRides, vehicleType]
-  );
+  const filteredRides = useMemo(() => {
+    if (!user?._id) return [];
+
+    if (vehicleType === "ride") {
+      return allRides.filter((ride) => ride.userId === user?._id);
+    }
+
+    return allRides.filter(
+      (ride) => ride.vehicleType === vehicleType && ride.userId !== user?._id
+    );
+  }, [allRides, vehicleType, user]);
 
   return (
     <View style={styles.container}>
-      <TabSwitcher vehicleType={vehicleType} setVehicleType={setVehicleType} />
+      <TabSwitcher
+        mode="rides"
+        vehicleType={vehicleType}
+        setVehicleType={setVehicleType}
+      />
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.color.gray900} />
@@ -57,7 +98,14 @@ export default function AvailableRides() {
         <FlatList
           data={filteredRides}
           keyExtractor={(item) => item._id}
-          renderItem={({ item }) => <RideCard ride={item} />}
+          renderItem={({ item }) => (
+            <RideCard
+              ride={item}
+              onDeleteRide={onDeleteRide}
+              onUpdateRide={onUpdateRide}
+              loadingRideDeletion={loadingRideDeletion}
+            />
+          )}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContent}
         />
@@ -67,6 +115,12 @@ export default function AvailableRides() {
         type="error"
         text={error}
         onDismiss={() => setError(null)}
+      />
+      <LiftSnackBar
+        visible={!!success}
+        type="success"
+        text={success}
+        onDismiss={() => setSuccess(null)}
       />
     </View>
   );

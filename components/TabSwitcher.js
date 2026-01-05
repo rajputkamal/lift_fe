@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   View,
   Text,
@@ -6,50 +5,56 @@ import {
   StyleSheet,
   LayoutAnimation,
 } from "react-native";
-import { CarFront, Bike } from "lucide-react-native";
-
+import { CarFront, Bike, User } from "lucide-react-native";
 import { theme } from "../styles/theme";
 
-const TABS = [
-  {
-    key: "car",
-    label: "Car",
-    icon: <CarFront size={16} color={theme.color.gray900} />,
-  },
-  {
-    key: "bike",
-    label: "Bike",
-    icon: <Bike size={16} color={theme.color.gray900} />,
-  },
-];
+const TAB_CONFIG = {
+  main: [
+    { key: "car", label: "Car", Icon: CarFront },
+    { key: "bike", label: "Bike", Icon: Bike },
+  ],
+  rides: [
+    { key: "ride", label: "My Rides", Icon: User },
+    { key: "car", label: "Car", Icon: CarFront },
+    { key: "bike", label: "Bike", Icon: Bike },
+  ],
+};
 
 export default function TabSwitcher({
+  mode = "main",
   vehicleType = "car",
   setVehicleType,
   setSeats,
 }) {
+  const tabs = TAB_CONFIG[mode] ?? TAB_CONFIG.main;
+
   const handlePress = (key) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
     if (key === "bike") {
-      setSeats && setSeats(1);
+      setSeats?.(1);
     }
+
     setVehicleType(key);
   };
 
   return (
     <View style={styles.container}>
-      {TABS.map((tab) => {
-        const isActive = vehicleType === tab.key;
+      {tabs.map(({ key, label, Icon }) => {
+        const isActive = vehicleType === key;
+        const color = isActive ? theme.color.gray900 : theme.color.gray600;
 
         return (
           <TouchableOpacity
-            key={tab.key}
+            key={key}
             style={[styles.tab, isActive && styles.activeTab]}
-            onPress={() => handlePress(tab.key)}
+            onPress={() => handlePress(key)}
             activeOpacity={0.8}
           >
-            {tab.icon && <View style={styles.icon}>{tab.icon}</View>}
-            {tab.label && <Text style={styles.label}>{tab.label}</Text>}
+            <View style={styles.content}>
+              <Icon size={16} color={color} />
+              <Text style={[styles.label, { color }]}>{label}</Text>
+            </View>
           </TouchableOpacity>
         );
       })}
@@ -65,22 +70,22 @@ const styles = StyleSheet.create({
     padding: theme.spacing.xs,
   },
   tab: {
-    flexDirection: "row",
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: theme.spacing.sm,
     borderRadius: theme.borderRadius.x_lg,
-    width: "50%",
   },
   activeTab: {
     backgroundColor: theme.color.gray300,
   },
-  icon: {
-    marginRight: theme.spacing.xs,
+  content: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   label: {
+    marginLeft: theme.spacing.xs,
     fontSize: theme.fontSize._14,
-    color: theme.color.gray900,
     fontWeight: theme.weight.medium,
   },
 });

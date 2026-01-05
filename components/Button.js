@@ -14,6 +14,7 @@ export default function Button({
   customStyles,
   disabled,
   loading,
+  loadingRideDeletion,
 }) {
   return (
     <TouchableOpacity
@@ -27,8 +28,13 @@ export default function Button({
       activeOpacity={disabled ? 1 : 0.7}
       disabled={disabled}
     >
-      {loading ? (
-        <ActivityIndicator size="small" color={theme.color.gray300} />
+      {loading || loadingRideDeletion ? (
+        <ActivityIndicator
+          size="small"
+          color={
+            loadingRideDeletion ? theme.color.orange500 : theme.color.gray300
+          }
+        />
       ) : (
         <Text
           style={[
@@ -55,7 +61,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: theme.color.white,
     fontSize: theme.fontSize._16,
-    fontWeight: theme.weight.semi,
+    fontWeight: theme.weight.medium,
   },
   secondaryButton: {
     backgroundColor: "transparent",
@@ -64,6 +70,8 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: theme.color.orange500,
+    fontSize: theme.fontSize._14,
+    fontWeight: theme.weight.medium,
   },
   secondaryDisabled: {
     borderColor: theme.color.gray300,

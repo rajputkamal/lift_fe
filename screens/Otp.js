@@ -15,10 +15,9 @@ import { theme } from "../styles/theme";
 import Timer from "../components/Timer";
 import Card from "../components/Card";
 import Button from "../components/Button";
-import { verifyOTP } from "../utils/api";
+import { fetchOTP, verifyOTP } from "../apis/otp.js";
 import Title from "../components/Title";
 import { saveToken } from "../utils/identity";
-import { fetchOTP } from "../utils/api";
 import { maskNumber } from "../utils/helper";
 import LiftSnackBar from "../components/LiftSnackbar";
 

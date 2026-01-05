@@ -1,3 +1,6 @@
+const GRACE_PERIOD_HOURS = 3;
+export const GRACE_PERIOD_MS = GRACE_PERIOD_HOURS * 60 * 60 * 1000;
+
 export const maskNumber = (number) => {
   const str = number.toString();
   if (str.length <= 4) return str;

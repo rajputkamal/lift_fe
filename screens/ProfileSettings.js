@@ -13,7 +13,7 @@ import * as Application from "expo-application";
 import { theme } from "../styles/theme";
 import Card from "../components/Card";
 import { deleteToken } from "../utils/identity";
-import { updateProfile } from "../utils/api";
+import { updateUserProfile } from "../apis/profile.js";
 import UserContext from "../context/UserContext";
 import Footer from "../components/Footer";
 import LiftSnackBar from "../components/LiftSnackbar";
@@ -65,7 +65,7 @@ export default function ProfileSettingsScreen({ navigation }) {
       setLoading(true);
 
       const payload = { [key]: trimmed };
-      const result = await updateProfile(payload);
+      const result = await updateUserProfile(payload);
 
       if (!result?.user) {
         setError("Failed to update profile. Please try again.");

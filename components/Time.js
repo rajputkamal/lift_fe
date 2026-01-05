@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import { Text, StyleSheet } from "react-native";
 
 import { theme } from "../styles/theme";
 
-export default function Time({ time, setIsOlderRide, seats }) {
+export default function Time({ time, seats }) {
   if (!time) return null;
 
   const rideDate = new Date(time);
@@ -30,16 +29,6 @@ export default function Time({ time, setIsOlderRide, seats }) {
     const year = rideDate.getFullYear();
     dayString = `${day}-${month}-${year}`;
   }
-
-  useEffect(() => {
-    if (setIsOlderRide) {
-      if (dayString !== "Today") {
-        setIsOlderRide(true);
-      } else {
-        setIsOlderRide(false);
-      }
-    }
-  }, [dayString]);
 
   const hours = rideDate.getHours().toString().padStart(2, "0");
   const minutes = rideDate.getMinutes().toString().padStart(2, "0");

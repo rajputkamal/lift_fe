@@ -13,7 +13,7 @@ import {
 import Card from "../components/Card";
 import Button from "../components/Button";
 import LiftInput from "../components/LiftInput";
-import { fetchOTP } from "../utils/api";
+import { fetchOTP } from "../apis/otp.js";
 import Title from "../components/Title";
 import { theme } from "../styles/theme";
 import Info from "../components/Info";

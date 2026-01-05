@@ -8,24 +8,19 @@ import Button from "./Button";
 import { theme } from "../styles/theme";
 import LiftSnackBar from "./LiftSnackbar";
 
-export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
+export default function CallUser({ phoneNumber, isOlderRide }) {
   const [callNotSupported, setCallNotSupported] = useState(false);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(null);
 
   const handleCallUser = async (phoneNumber) => {
+    //TODO:: Yet to added the logger to count calling status
     if (isOlderRide) {
       setError(
         "This ride has already ended. You can only call users for active or upcoming rides."
       );
       return;
     }
-
-    if (!phoneNumber) {
-      setError("This user does not have a phone number.");
-      return;
-    }
-
     const url =
       Platform.OS === "ios" ? `telprompt:${phoneNumber}` : `tel:${phoneNumber}`;
 
@@ -33,7 +28,9 @@ export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
       const supported = await Linking.canOpenURL(url);
 
       if (!supported) {
-        setError("Your device cannot make phone calls.");
+        setError(
+          "Unable to open dialer. Please copy the number and call manually."
+        );
         setCallNotSupported(true);
         return;
       }
@@ -56,23 +53,23 @@ export default function CallUser({ phoneNumber, isOlderRide, isYourRide }) {
         onPress={
           callNotSupported ? handleCopy : () => handleCallUser(phoneNumber)
         }
-        disabled={isYourRide}
+        // disabled={isOlderRide}
       >
         <View style={styles.buttonContent}>
           {callNotSupported ? (
             <ClipboardCopy
               size={18}
-              color={isYourRide ? theme.color.gray400 : theme.color.white}
+              color={isOlderRide ? theme.color.gray400 : theme.color.white}
             />
           ) : (
             <Phone
               size={18}
-              color={isYourRide ? theme.color.gray400 : theme.color.white}
+              color={isOlderRide ? theme.color.gray400 : theme.color.white}
             />
           )}
           <Text
             style={{
-              color: isYourRide ? theme.color.gray400 : theme.color.white,
+              color: isOlderRide ? theme.color.gray400 : theme.color.white,
               fontSize: theme.fontSize._16,
             }}
           >

@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 
-import { getUserProfile } from "../utils/api";
+import { getUserProfile } from "../apis/profile.js";
 
 const UserContext = createContext({
   user: null,

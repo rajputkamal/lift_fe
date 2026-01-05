@@ -17,7 +17,7 @@ import SuggestionList from "../components/SuggestionList";
 import TimePicker from "../components/TimePicker";
 import Seats from "../components/Seats";
 import LiftInput from "../components/LiftInput";
-import { requestRide } from "../utils/api";
+import { requestRide, updateRide } from "../apis/ride.js";
 import UserContext from "../context/UserContext";
 import LiftSnackBar from "../components/LiftSnackbar";
 import TabSwitcher from "../components/TabSwitcher";
@@ -27,24 +27,34 @@ import { theme } from "../styles/theme";
 
 const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-export default function Home({ navigation }) {
+export default function Home({ route, navigation }) {
   const { user } = useContext(UserContext);
+  const { editableRide } = route?.params || {};
+
   const [loading, setLoading] = useState(false);
+
+  // ride state and state handler functions
+  const [vehicleType, setVehicleType] = useState("car");
+  const [origin, setOrigin] = useState("");
+
+  const [originCoords, setOriginCoords] = useState(null);
+  const [destination, setDestination] = useState("");
+
+  const [destinationCoords, setDestinationCoords] = useState(null);
   const [dateTime, setDateTime] = useState(new Date());
   const [seats, setSeats] = useState(1);
 
-  const [suggestions, setSuggestions] = useState([]);
-  const [origin, setOrigin] = useState("");
-  const [destination, setDestination] = useState("");
+  //sate to add input focus effect
   const [activeField, setActiveField] = useState("origin");
-  const [originCoords, setOriginCoords] = useState(null);
-  const [destinationCoords, setDestinationCoords] = useState(null);
 
+  const [suggestions, setSuggestions] = useState([]);
+
+  //state to display the Snackbar
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [info, setInfo] = useState(null);
-  const [vehicleType, setVehicleType] = useState("car");
 
+  // state to handle the ride price, priceRange and distance
   const [priceRange, setPriceRange] = useState(null);
   const [selectedPrice, setSelectedPrice] = useState(null);
   const [distance, setDistance] = useState(0);
@@ -97,6 +107,18 @@ export default function Home({ navigation }) {
     Keyboard.dismiss();
   };
 
+  const resetForm = () => {
+    setOrigin("");
+    setDestination("");
+    setOriginCoords(null);
+    setDestinationCoords(null);
+    setDateTime(new Date());
+    setSeats(1);
+    setDistance(0);
+    setPriceRange(null);
+    setSelectedPrice(null);
+  };
+
   const onContinue = async () => {
     if (!user?.name) {
       setInfo(
@@ -105,9 +127,7 @@ export default function Home({ navigation }) {
       return;
     }
 
-    setLoading(true);
-
-    const result = await requestRide({
+    const payload = {
       origin,
       destination,
       originCoords,
@@ -117,27 +137,50 @@ export default function Home({ navigation }) {
       price: selectedPrice,
       distance,
       vehicleType,
-    });
+    };
 
-    if (result?.message) {
-      setSuccess("Your ride has been offered successfully.");
-      setOrigin("");
-      setDestination("");
-      setOriginCoords(null);
-      setDestinationCoords(null);
-      setDateTime(new Date());
-      setSeats(1);
-      setDistance(0);
-      setPriceRange(null);
-      setSelectedPrice(null);
+    setLoading(true);
+
+    try {
+      let result;
+
+      if (editableRide) {
+        result = await updateRide({
+          rideId: editableRide._id,
+          ...payload,
+        });
+
+        if (!result?.success) {
+          throw new Error("Could not update ride. Please try again.");
+        }
+
+        setSuccess("Your ride has been updated successfully.");
+      } else {
+        result = await requestRide(payload);
+
+        if (!result?.message) {
+          throw new Error("Could not offer ride. Please try again.");
+        }
+
+        setSuccess("Your ride has been offered successfully.");
+      }
+
+      resetForm();
+
       setTimeout(() => {
         setSuccess(null);
         navigation.navigate("Rides");
       }, 1000);
-    } else {
-      setError("Could not offer ride. Please try again later.");
+    } catch (err) {
+      console.error(err);
+      setError(
+        editableRide
+          ? "Could not update ride. Please try again."
+          : "Could not offer ride. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const onChangeTextHandler = (text, field) => {
@@ -179,10 +222,11 @@ export default function Home({ navigation }) {
         setSelectedPrice(mid);
       })();
     }
-  }, [originCoords, destinationCoords, vehicleType]);
+  }, [originCoords, destinationCoords, vehicleType, editableRide]);
 
   useFocusEffect(
     useCallback(() => {
+      if (editableRide) return;
       let isActive = true;
 
       const fetchLocation = async () => {
@@ -220,7 +264,7 @@ export default function Home({ navigation }) {
       return () => {
         isActive = false;
       };
-    }, [])
+    }, [editableRide])
   );
 
   useFocusEffect(
@@ -228,6 +272,20 @@ export default function Home({ navigation }) {
       setDateTime(new Date());
     }, [])
   );
+
+  useEffect(() => {
+    if (!editableRide) return;
+
+    setOrigin(editableRide.origin);
+    setDestination(editableRide.destination);
+    setOriginCoords(editableRide.originCoords);
+    setDestinationCoords(editableRide.destinationCoords);
+    setDateTime(new Date(editableRide.time));
+    setSeats(editableRide.seatsAvailable);
+    setVehicleType(editableRide.vehicleType);
+    setSelectedPrice(editableRide.price);
+    setDistance(editableRide.distance);
+  }, [editableRide]);
 
   return (
     <KeyboardAvoidingView
@@ -293,7 +351,7 @@ export default function Home({ navigation }) {
                 disabled={!origin || !destination || selectedPrice == null}
                 loading={loading}
               >
-                Offer Ride
+                {editableRide ? "Update Ride" : " Offer Ride"}
               </Button>
             </View>
           </Card>

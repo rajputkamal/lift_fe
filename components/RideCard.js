@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import {
   MapPin,
@@ -13,13 +13,22 @@ import Card from "./Card";
 import Avatar from "./Avatar";
 import CallUser from "./CallUser";
 import Time from "./Time";
+import Button from "./Button";
+import { GRACE_PERIOD_MS } from "../utils/helper";
 
-export default function RideCard({ ride }) {
+export default function RideCard({
+  ride,
+  onDeleteRide,
+  onUpdateRide,
+  loadingRideDeletion,
+}) {
   const { user } = useContext(UserContext);
-  const [isOlderRide, setIsOlderRide] = useState(false);
 
   const isYourRide = user?.phoneNumber === ride?.userNumber;
 
+  const rideTime = new Date(ride.time).getTime();
+  const isOlderRide = Date.now() > rideTime + GRACE_PERIOD_MS;
+  
   return (
     <Card>
       <View>
@@ -32,7 +41,9 @@ export default function RideCard({ ride }) {
             </Text>
             <Text style={styles.rating}>
               ⭐ {ride?.rating ?? "4.8"} |{" "}
-              {ride?.vehicleNumber ? ride.vehicleNumber : "Vehicle info not available"}
+              {ride?.vehicleNumber
+                ? ride.vehicleNumber
+                : "Vehicle info not available"}
             </Text>
           </View>
         </View>
@@ -55,17 +66,26 @@ export default function RideCard({ ride }) {
           <IndianRupee size={14} strokeWidth={3} />
           {ride.price}
         </Text>
-        <Time
-          time={ride?.time}
-          setIsOlderRide={setIsOlderRide}
-          seats={ride?.seatsAvailable}
-        />
+        <Time time={ride?.time} seats={ride?.seatsAvailable} />
       </View>
-      <CallUser
-        phoneNumber={ride?.userNumber}
-        isOlderRide={isOlderRide}
-        isYourRide={isYourRide}
-      />
+      {isYourRide ? (
+        <View style={styles.actionButtons}>
+          <View style={styles.button}>
+            <Button
+              secondary
+              loadingRideDeletion={loadingRideDeletion}
+              onPress={() => onDeleteRide(ride._id)}
+            >
+              Delete
+            </Button>
+          </View>
+          <View style={styles.button}>
+            <Button onPress={() => onUpdateRide(ride)}>Edit</Button>
+          </View>
+        </View>
+      ) : (
+        <CallUser phoneNumber={ride?.userNumber} isOlderRide={isOlderRide} />
+      )}
     </Card>
   );
 }
@@ -108,5 +128,13 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSize._16,
     fontWeight: theme.weight.semi,
     color: theme.color.primary,
+  },
+  actionButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: theme.spacing.xs,
+  },
+  button: {
+    width: "50%",
   },
 });
