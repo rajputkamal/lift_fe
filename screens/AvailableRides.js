@@ -1,5 +1,11 @@
 import { useState, useCallback, useMemo, useContext } from "react";
-import { View, FlatList, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { CarFront } from "lucide-react-native";
 
@@ -15,6 +21,7 @@ export default function AvailableRides({ navigation }) {
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const [loadingRideDeletion, setLoadingRideDeletion] = useState(false);
+  const [deletingRideId, setDeletingRideId] = useState(null);
   const [allRides, setAllRides] = useState([]);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
@@ -31,8 +38,27 @@ export default function AvailableRides({ navigation }) {
     setLoading(false);
   }, []);
 
-  const onDeleteRide = async (rideId) => {
-    setLoadingRideDeletion(true);
+  const onDeleteRide = (rideId) => {
+    Alert.alert(
+      "Delete Ride?",
+      "This ride will be permanently removed and will no longer be visible to other users. This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => deleteRideHandler(rideId),
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const deleteRideHandler = async (rideId) => {
+    setDeletingRideId(rideId);
     try {
       const result = await deleteRide(rideId);
 
@@ -45,7 +71,7 @@ export default function AvailableRides({ navigation }) {
     } catch (error) {
       setError("Failed to delete ride. Please try again.");
     } finally {
-      setLoadingRideDeletion(false);
+      setDeletingRideId(null);
     }
   };
 
@@ -103,7 +129,7 @@ export default function AvailableRides({ navigation }) {
               ride={item}
               onDeleteRide={onDeleteRide}
               onUpdateRide={onUpdateRide}
-              loadingRideDeletion={loadingRideDeletion}
+              loadingRideDeletion={deletingRideId === item._id}
             />
           )}
           showsVerticalScrollIndicator={false}

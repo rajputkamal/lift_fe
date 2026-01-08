@@ -20,13 +20,13 @@ export const fetchOTP = async (phoneNumber) => {
   }
 };
 
-export const verifyOTP = async (phoneNumber, otp) => {
+export const verifyOTP = async (phoneNumber, otp, verificationId) => {
   // TODO:: Needs to be updated when message central OTP flow will be updated in BE
   try {
     const response = await fetch(`${BASE_URL}/auth/verify-otp`, {
       method: "POST",
       headers: buildRequestHeaders(),
-      body: JSON.stringify({ phoneNumber, otp }),
+      body: JSON.stringify({ phoneNumber, otp, verificationId }),
     });
 
     if (!response.ok) {

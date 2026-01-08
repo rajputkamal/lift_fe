@@ -1,33 +1,23 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import { theme } from "../styles/theme";
 
 export default function Timer({ timeLeft, setTimeLeft, handleResend }) {
-  const timerRef = useRef(null);
-
   useEffect(() => {
     if (timeLeft <= 0) return;
 
-    timerRef.current = setInterval(() => {
+    const interval = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
-    return () => clearInterval(timerRef.current);
+    return () => clearInterval(interval);
   }, [timeLeft]);
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-  };
 
   return (
     <View>
       {timeLeft > 0 ? (
-        <Text style={styles.subtitle}>
-          Resend OTP in {formatTime(timeLeft)}
-        </Text>
+        <Text style={styles.subtitle}>Resend OTP in {timeLeft}s</Text>
       ) : (
         <TouchableOpacity onPress={handleResend}>
           <Text style={[styles.subtitle, styles.resendText]}>Resend OTP</Text>

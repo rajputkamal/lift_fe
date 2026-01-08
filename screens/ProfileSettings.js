@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Pencil, Check } from "lucide-react-native";
 import * as Application from "expo-application";
@@ -98,123 +100,145 @@ export default function ProfileSettingsScreen({ navigation }) {
     });
   };
 
+  const cancelEditing = () => {
+    setName(user?.name);
+    setVehicle(user?.vehicleNumber);
+    setEditingName(false);
+    setEditingVehicle(false);
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      <Card>
-        <View style={styles.nameContainer}>
-          <Avatar name={user?.name ? user?.name : "NA"} />
-          <View>
-            <Text style={styles.label}>Name</Text>
-            {editingName ? (
-              <TextInput
-                style={styles.input}
-                value={name}
-                onChangeText={nameChangeHandler}
-                autoFocus
-                placeholder="Enter your name"
-                placeholderTextColor={theme.color.gray400}
-                autoCorrect={false}
-                maxLength={32}
-              />
-            ) : (
-              <Text style={styles.value}>{capitalizeWords(name)}</Text>
-            )}
-          </View>
-
-          {loading && editingName ? (
-            <ActivityIndicator size="small" color={theme.color.gray300} />
-          ) : (
-            <TouchableOpacity
-              onPress={
-                editingName
-                  ? () => handleSave("name")
-                  : () => setEditingName(true)
-              }
-            >
+    <TouchableWithoutFeedback onPress={cancelEditing}>
+      <View style={styles.container}>
+        <Card>
+          <View style={styles.nameContainer}>
+            <Avatar name={user?.name ? user?.name : "NA"} />
+            <View style={styles.nameWrapper}>
+              <Text style={styles.label}>Name</Text>
               {editingName ? (
-                <Check size={22} color={theme.color.purple600} />
+                <TextInput
+                  style={styles.input}
+                  value={name}
+                  onChangeText={nameChangeHandler}
+                  autoFocus
+                  placeholder="Enter your name"
+                  placeholderTextColor={theme.color.gray400}
+                  autoCorrect={false}
+                  maxLength={32}
+                />
               ) : (
-                <Pencil size={18} color={theme.color.purple600} />
+                <Text style={styles.value}>{capitalizeWords(name)}</Text>
               )}
-            </TouchableOpacity>
-          )}
-        </View>
-      </Card>
+            </View>
 
-      <Card>
-        <View style={styles.nameContainer}>
-          <View>
-            <Text style={styles.label}>Vehicle Number</Text>
-            {editingVehicle ? (
-              <TextInput
-                style={styles.input}
-                value={vehicle}
-                onChangeText={(text) => setVehicle(text)}
-                autoFocus
-                placeholder="Vehcile type | Vehicle number"
-                placeholderTextColor={theme.color.gray400}
-                autoCorrect={false}
-                maxLength={32}
+            {loading && editingName ? (
+              <ActivityIndicator
+                style={styles.editIcons}
+                size="small"
+                color={theme.color.gray300}
               />
             ) : (
-              <Text style={styles.value}>{(vehicle || "").toUpperCase()}</Text>
+              <TouchableOpacity
+                style={styles.editIcons}
+                onPress={
+                  editingName
+                    ? () => handleSave("name")
+                    : () => setEditingName(true)
+                }
+              >
+                {editingName ? (
+                  <Check size={22} color={theme.color.purple600} />
+                ) : (
+                  <Pencil size={18} color={theme.color.purple600} />
+                )}
+              </TouchableOpacity>
             )}
           </View>
+        </Card>
 
-          {loading && editingVehicle ? (
-            <ActivityIndicator size="small" color={theme.color.gray300} />
-          ) : (
-            <TouchableOpacity
-              onPress={
-                editingVehicle
-                  ? () => handleSave("vehicleNumber")
-                  : () => setEditingVehicle(true)
-              }
-            >
+        <Card>
+          <View style={styles.nameContainer}>
+            <View>
+              <Text style={styles.label}>Vehicle Number</Text>
               {editingVehicle ? (
-                <Check size={22} color={theme.color.purple600} />
+                <TextInput
+                  style={styles.input}
+                  value={vehicle}
+                  onChangeText={(text) => setVehicle(text)}
+                  autoFocus
+                  placeholder="Vehcile type | Vehicle number"
+                  placeholderTextColor={theme.color.gray400}
+                  autoCorrect={false}
+                  maxLength={32}
+                />
               ) : (
-                <Pencil size={18} color={theme.color.purple600} />
+                <Text style={styles.value}>
+                  {(vehicle || "").toUpperCase()}
+                </Text>
               )}
-            </TouchableOpacity>
-          )}
-        </View>
-      </Card>
+            </View>
 
-      <Card>
-        <View>
-          <Text style={styles.label}>Mobile</Text>
-          <Text style={styles.value}>+91 {user?.phoneNumber}</Text>
-        </View>
-      </Card>
-      <Card>
-        <View>
-          <Text style={styles.label}>App Version</Text>
-          <Text style={styles.value}>
-            v{Application.nativeApplicationVersion}
-          </Text>
-        </View>
-      </Card>
-      <Card>
-        <TouchableOpacity onPress={logout}>
-          <Text style={styles.logout}>Logout</Text>
-        </TouchableOpacity>
-      </Card>
-      <LiftSnackBar
-        visible={!!error}
-        type="error"
-        text={error}
-        onDismiss={() => setError(null)}
-        duration={1000}
-      />
-      <LiftSnackBar
-        visible={(!editingName || !editingVehicle) && !!success}
-        type="success"
-        text={success}
-        onDismiss={() => setSuccess(null)}
-      />
-      <Footer />
-    </View>
+            {loading && editingVehicle ? (
+              <ActivityIndicator
+                style={styles.editIcons}
+                size="small"
+                color={theme.color.gray300}
+              />
+            ) : (
+              <TouchableOpacity
+                style={styles.editIcons}
+                onPress={
+                  editingVehicle
+                    ? () => handleSave("vehicleNumber")
+                    : () => setEditingVehicle(true)
+                }
+              >
+                {editingVehicle ? (
+                  <Check size={22} color={theme.color.purple600} />
+                ) : (
+                  <Pencil size={18} color={theme.color.purple600} />
+                )}
+              </TouchableOpacity>
+            )}
+          </View>
+        </Card>
+
+        <Card>
+          <View>
+            <Text style={styles.label}>Mobile</Text>
+            <Text style={styles.value}>+91 {user?.phoneNumber}</Text>
+          </View>
+        </Card>
+        <Card>
+          <View>
+            <Text style={styles.label}>App Version</Text>
+            <Text style={styles.value}>
+              v{Application.nativeApplicationVersion}
+            </Text>
+          </View>
+        </Card>
+        <Card>
+          <TouchableOpacity onPress={logout}>
+            <Text style={styles.logout}>Logout</Text>
+          </TouchableOpacity>
+        </Card>
+        <LiftSnackBar
+          visible={!!error}
+          type="error"
+          text={error}
+          onDismiss={() => setError(null)}
+          duration={1000}
+        />
+        <LiftSnackBar
+          visible={(!editingName || !editingVehicle) && !!success}
+          type="success"
+          text={success}
+          onDismiss={() => setSuccess(null)}
+        />
+        <Footer />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -228,7 +252,9 @@ const styles = StyleSheet.create({
   nameContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+  },
+  nameWrapper: {
+    marginLeft: theme.spacing.md,
   },
   label: {
     fontSize: theme.fontSize._14,
@@ -239,8 +265,6 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSize._16,
     fontWeight: theme.weight.semi,
     color: theme.color.gray900,
-    width: 250,
-    // textTransform: "capitalize",
   },
   input: {
     fontSize: theme.fontSize._16,
@@ -249,7 +273,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingBottom: theme.spacing.xs,
     borderBottomColor: theme.color.gray300,
-    width: 250,
+    minWidth: 200,
+  },
+  editIcons: {
+    marginLeft: "auto",
   },
   logout: {
     color: theme.color.orange500,

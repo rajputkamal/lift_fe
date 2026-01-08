@@ -102,8 +102,6 @@ export default function PriceSelector({ minPrice, maxPrice, onPriceChange }) {
 
 const styles = StyleSheet.create({
   card: {
-    borderTopColor: theme.color.gray200,
-    borderTopWidth: 1,
     marginBottom: theme.spacing.sm,
   },
 

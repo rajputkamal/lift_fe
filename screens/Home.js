@@ -169,7 +169,10 @@ export default function Home({ route, navigation }) {
 
       setTimeout(() => {
         setSuccess(null);
-        navigation.navigate("Rides");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Rides" }],
+        });
       }, 1000);
     } catch (err) {
       console.error(err);

@@ -35,7 +35,10 @@ export default function Login({ navigation }) {
     setLoading(true);
     const result = await fetchOTP(number);
     if (result?.message === "OTP sent successfully") {
-      navigation.navigate("otp", { phoneNumber: number });
+      navigation.navigate("otp", {
+        phoneNumber: number,
+        verificationId: result.verificationId,
+      });
     } else {
       setError("Failed to send OTP. Please try again.");
     }

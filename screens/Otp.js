@@ -23,22 +23,40 @@ import LiftSnackBar from "../components/LiftSnackbar";
 
 export default function Otp({ route, navigation }) {
   const inputs = useRef([]);
-  const { phoneNumber } = route.params;
+  const { phoneNumber, verificationId } = route.params;
+
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(180);
+  const [timeLeft, setTimeLeft] = useState(60);
   const [code, setCode] = useState(["", "", "", ""]);
 
+  //state to store resend OTP result as now we have to send verificationId to the verify OTP call
+  const [resendOtpResult, setResendOtpResult] = useState(null);
+
   const handleChange = (text, index) => {
+    // CASE 1: User pasted full OTP (clipboard)
+    if (/^\d{4}$/.test(text)) {
+      const digits = text.split("");
+      setCode(digits);
+
+      // focus last input for visual confirmation
+      inputs.current[3]?.focus();
+      return;
+    }
+
+    // CASE 2: Normal single digit entry
     if (/^\d$/.test(text)) {
       const newCode = [...code];
       newCode[index] = text;
       setCode(newCode);
 
       if (index < 3) {
-        inputs.current[index + 1].focus();
+        inputs.current[index + 1]?.focus();
       }
-    } else if (text === "") {
+    }
+
+    // CASE 3: Clear
+    if (text === "") {
       const newCode = [...code];
       newCode[index] = "";
       setCode(newCode);
@@ -47,8 +65,11 @@ export default function Otp({ route, navigation }) {
 
   const handleSubmit = async () => {
     setLoading(true);
-    const fullCode = code.join("");
-    const result = await verifyOTP(phoneNumber, fullCode);
+    const otp = code.join("");
+    const vId = resendOtpResult
+      ? resendOtpResult?.verificationId
+      : verificationId;
+    const result = await verifyOTP(phoneNumber, otp, vId);
     if (result?.token) {
       await saveToken(result.token);
       navigation.navigate("map");
@@ -92,9 +113,11 @@ export default function Otp({ route, navigation }) {
     const result = await fetchOTP(phoneNumber);
     if (result?.message !== "OTP sent successfully") {
       setError("Failed to send OTP. Please try again.");
+    } else {
+      setResendOtpResult(result);
     }
     setLoading(false);
-    setTimeLeft(180);
+    setTimeLeft(60);
   };
 
   return (
@@ -111,14 +134,11 @@ export default function Otp({ route, navigation }) {
             <Card>
               <Title mainHeading>Enter Verification Code</Title>
               <Title subHeading>
-                A 4‑digit code has been sent to
+                A 4‑digit OTP has been sent to
                 <Text style={styles.maskedNumber}>
                   {" "}
                   {maskNumber(phoneNumber)}{" "}
                 </Text>
-                If you don’t get it, we'll
-                <Text style={styles.maskedNumber}> call you </Text>
-                with the code.
               </Title>
 
               <View style={styles.inputRow}>
@@ -128,10 +148,13 @@ export default function Otp({ route, navigation }) {
                     ref={(el) => (inputs.current[index] = el)}
                     style={styles.inputBox}
                     keyboardType="numeric"
-                    maxLength={1}
+                    maxLength={index === 0 ? 4 : 1}
                     value={digit}
                     onChangeText={(text) => handleChange(text, index)}
                     onKeyPress={(e) => handleKeyPress(e, index)}
+                    textContentType="oneTimeCode" //iOS
+                    autoComplete="sms-otp" // Android
+                    importantForAutofill="yes"
                   />
                 ))}
               </View>

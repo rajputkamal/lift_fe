@@ -14,7 +14,6 @@ import Avatar from "./Avatar";
 import CallUser from "./CallUser";
 import Time from "./Time";
 import Button from "./Button";
-import { GRACE_PERIOD_MS } from "../utils/helper";
 
 export default function RideCard({
   ride,
@@ -26,9 +25,6 @@ export default function RideCard({
 
   const isYourRide = user?.phoneNumber === ride?.userNumber;
 
-  const rideTime = new Date(ride.time).getTime();
-  const isOlderRide = Date.now() > rideTime + GRACE_PERIOD_MS;
-  
   return (
     <Card>
       <View>
@@ -40,7 +36,7 @@ export default function RideCard({
               {isYourRide && " (You)"}
             </Text>
             <Text style={styles.rating}>
-              ⭐ {ride?.rating ?? "4.8"} |{" "}
+              ⭐ {ride?.rating ?? "1.0"} |{" "}
               {ride?.vehicleNumber
                 ? ride.vehicleNumber
                 : "Vehicle info not available"}
@@ -84,7 +80,7 @@ export default function RideCard({
           </View>
         </View>
       ) : (
-        <CallUser phoneNumber={ride?.userNumber} isOlderRide={isOlderRide} />
+        <CallUser phoneNumber={ride?.userNumber} />
       )}
     </Card>
   );
