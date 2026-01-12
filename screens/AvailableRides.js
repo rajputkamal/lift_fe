@@ -5,9 +5,10 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { CarFront } from "lucide-react-native";
+import { CarFront, RefreshCw } from "lucide-react-native";
 
 import RideCard from "../components/RideCard";
 import Title from "../components/Title";
@@ -20,7 +21,6 @@ import UserContext from "../context/UserContext.js";
 export default function AvailableRides({ navigation }) {
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-  const [loadingRideDeletion, setLoadingRideDeletion] = useState(false);
   const [deletingRideId, setDeletingRideId] = useState(null);
   const [allRides, setAllRides] = useState([]);
   const [success, setSuccess] = useState(null);
@@ -101,6 +101,27 @@ export default function AvailableRides({ navigation }) {
       (ride) => ride.vehicleType === vehicleType && ride.userId !== user?._id
     );
   }, [allRides, vehicleType, user]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const parent = navigation.getParent();
+
+      parent?.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={getAllRides}
+            style={{ marginRight: theme.spacing.lg }}
+          >
+            <RefreshCw size={22} color={theme.color.purple600} />
+          </TouchableOpacity>
+        ),
+      });
+
+      return () => {
+        parent?.setOptions({ headerRight: undefined });
+      };
+    }, [navigation])
+  );
 
   return (
     <View style={styles.container}>

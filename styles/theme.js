@@ -1,4 +1,13 @@
 export const theme = {
+  darkThemeColors: {
+    background: "#121212",
+    cardBg1: "rgba(255, 255, 255, 0.3)",
+    cardBg2: "rgba(255, 255, 255, 0.5)",
+    cardBg3: "rgba(255, 255, 255, 0.7)",
+    cardBg4: "rgba(255, 255, 255, 0.08)",
+    cardBg5: "rgba(255, 255, 255, 0.12)",
+    cardBg6: "rgba(255, 255, 255, 0.16)",
+  },
   color: {
     white: "#FFFFFF",
     black: "#000000",

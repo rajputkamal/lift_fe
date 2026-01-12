@@ -9,7 +9,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Pencil, Check } from "lucide-react-native";
+import { Pencil, Check, LogOut } from "lucide-react-native";
 import * as Application from "expo-application";
 
 import { theme } from "../styles/theme";
@@ -219,7 +219,8 @@ export default function ProfileSettingsScreen({ navigation }) {
           </View>
         </Card>
         <Card>
-          <TouchableOpacity onPress={logout}>
+          <TouchableOpacity onPress={logout} style={styles.logoutContainer}>
+            <LogOut size={18} color={theme.color.orange500} />
             <Text style={styles.logout}>Logout</Text>
           </TouchableOpacity>
         </Card>
@@ -278,9 +279,14 @@ const styles = StyleSheet.create({
   editIcons: {
     marginLeft: "auto",
   },
+  logoutContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing.xs,
+  },
   logout: {
     color: theme.color.orange500,
     fontSize: theme.fontSize._16,
-    fontWeight: theme.weight.semi,
+    fontWeight: theme.weight.medium,
   },
 });
