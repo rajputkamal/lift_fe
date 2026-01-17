@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.color.purple600,
     paddingVertical: theme.spacing.sm,
     paddingHorizontal: theme.spacing.sm,
-    borderRadius: theme.borderRadius.sm,
+    borderRadius: theme.borderRadius.x_lg,
     alignItems: "center",
   },
   buttonText: {

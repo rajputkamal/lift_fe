@@ -2,8 +2,10 @@ import { StyleSheet, View } from "react-native";
 
 import { theme } from "../styles/theme";
 
-export default function Card({ children }) {
-  return <View style={styles.card}>{children}</View>;
+export default function Card({ children, rounded = false }) {
+  return (
+    <View style={[styles.card, rounded && styles.rounded]}>{children}</View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -19,5 +21,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 6, // for Android shadow
+  },
+  rounded: {
+    borderRadius: theme.borderRadius.x_lg,
   },
 });

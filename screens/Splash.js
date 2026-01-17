@@ -1,18 +1,37 @@
 import { useEffect, useRef } from "react";
 import { Animated, View, StyleSheet } from "react-native";
 
-import { getToken } from "../utils/identity";
+import { getToken, deleteToken } from "../utils/identity";
+import { validate } from "../apis/auth";
 
 export default function Splash({ navigation }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  const logout = async () => {
+    await deleteToken();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "login" }],
+    });
+  };
+
   useEffect(() => {
     async function checkLogin() {
       const token = await getToken();
-      if (token) {
-        navigation.replace("map");
+
+      if (!token) {
+        await logout();
       } else {
-        navigation.replace("login");
+        try {
+          const userData = await validate(token);
+          if (userData.isUserExists) {
+            navigation.replace("map");
+          } else {
+            await logout();
+          }
+        } catch (error) {
+          await logout();
+        }
       }
     }
     checkLogin();

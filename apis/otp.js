@@ -1,5 +1,4 @@
-import { BASE_URL } from "./config";
-import { buildRequestHeaders } from "./config";
+import { BASE_URL, buildRequestHeaders } from "./config";
 
 export const fetchOTP = async (phoneNumber) => {
   try {

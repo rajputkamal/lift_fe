@@ -174,7 +174,7 @@ export default function ProfileSettingsScreen({ navigation }) {
                 />
               ) : (
                 <Text style={styles.value}>
-                  {(vehicle || "").toUpperCase()}
+                  {(vehicle || "NA").toUpperCase()}
                 </Text>
               )}
             </View>
@@ -218,7 +218,7 @@ export default function ProfileSettingsScreen({ navigation }) {
             </Text>
           </View>
         </Card>
-        <Card>
+        <Card rounded>
           <TouchableOpacity onPress={logout} style={styles.logoutContainer}>
             <LogOut size={18} color={theme.color.orange500} />
             <Text style={styles.logout}>Logout</Text>
