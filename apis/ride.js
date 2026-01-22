@@ -1,10 +1,31 @@
 import { BASE_URL, buildRequestHeaders } from "./config";
 import { getToken } from "../utils/identity";
 
-export const fetchAvailableRides = async () => {
+export const fetchAvailableRides = async (vehicleType = "car") => {
   const token = await getToken();
   try {
-    const response = await fetch(`${BASE_URL}/ride`, {
+    const response = await fetch(
+      `${BASE_URL}/ride/available?vehicleType=${vehicleType}`,
+      {
+        method: "GET",
+        headers: buildRequestHeaders(token),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`Server responded with ${response.status}`);
+    }
+    const data = await response.json();
+    if (data) return data;
+  } catch (error) {
+    console.error("Error fetching available rides:", error);
+  }
+};
+
+export const fetchMyRides = async (status = "active") => {
+  const token = await getToken();
+  try {
+    const response = await fetch(`${BASE_URL}/ride/my?tab=${status}`, {
       method: "GET",
       headers: buildRequestHeaders(token),
     });
@@ -15,7 +36,7 @@ export const fetchAvailableRides = async () => {
     const data = await response.json();
     if (data) return data;
   } catch (error) {
-    console.error("Error fetching available rides:", error);
+    console.error("Error fetching my rides:", error);
   }
 };
 

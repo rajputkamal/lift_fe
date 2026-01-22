@@ -28,8 +28,8 @@ import { theme } from "../styles/theme";
 const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 export default function Home({ route, navigation }) {
-  const { user } = useContext(UserContext);
-  const { editableRide } = route?.params || {};
+  const { user, refreshUser } = useContext(UserContext);
+  const { editableRide, action } = route?.params || {};
 
   const [loading, setLoading] = useState(false);
 
@@ -67,7 +67,7 @@ export default function Home({ route, navigation }) {
 
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&key=${GOOGLE_MAPS_API_KEY}`
+        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&key=${GOOGLE_MAPS_API_KEY}`,
       );
       const data = await response.json();
       setSuggestions(data.predictions || []);
@@ -80,8 +80,8 @@ export default function Home({ route, navigation }) {
     try {
       const res = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          address
-        )}&key=${GOOGLE_MAPS_API_KEY}`
+          address,
+        )}&key=${GOOGLE_MAPS_API_KEY}`,
       );
       const data = await res.json();
       if (data.results.length > 0) {
@@ -122,7 +122,7 @@ export default function Home({ route, navigation }) {
   const onContinue = async () => {
     if (!user?.name) {
       setInfo(
-        "To offer or book rides smoothly, we recommend adding your name to your profile."
+        "To offer or book rides smoothly, we recommend adding your name to your profile.",
       );
       return;
     }
@@ -145,6 +145,9 @@ export default function Home({ route, navigation }) {
       let result;
 
       if (editableRide) {
+        if (action === "repost") {
+          payload.action = "repost";
+        }
         result = await updateRide({
           rideId: editableRide._id,
           ...payload,
@@ -154,7 +157,11 @@ export default function Home({ route, navigation }) {
           throw new Error("Could not update ride. Please try again.");
         }
 
-        setSuccess("Your ride has been updated successfully.");
+        setSuccess(
+          action === "repost"
+            ? "Your ride has been reposted successfully."
+            : "Your ride has been updated successfully.",
+        );
       } else {
         result = await requestRide(payload);
 
@@ -165,13 +172,14 @@ export default function Home({ route, navigation }) {
         setSuccess("Your ride has been offered successfully.");
       }
 
+      refreshUser();
       resetForm();
 
       setTimeout(() => {
         setSuccess(null);
         navigation.reset({
           index: 0,
-          routes: [{ name: "Rides" }],
+          routes: [{ name: "myRides" }],
         });
       }, 1000);
     } catch (err) {
@@ -179,7 +187,7 @@ export default function Home({ route, navigation }) {
       setError(
         editableRide
           ? "Could not update ride. Please try again."
-          : "Could not offer ride. Please try again."
+          : "Could not offer ride. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -213,14 +221,14 @@ export default function Home({ route, navigation }) {
         const result = await calculatePrice(
           originCoords,
           destinationCoords,
-          vehicleType
+          vehicleType,
         );
 
         const { distance, priceRange } = result;
         setPriceRange(priceRange);
         setDistance(distance);
         const mid = Math.round(
-          (result.priceRange.min + result.priceRange.max) / 2
+          (result.priceRange.min + result.priceRange.max) / 2,
         );
         setSelectedPrice(mid);
       })();
@@ -267,13 +275,13 @@ export default function Home({ route, navigation }) {
       return () => {
         isActive = false;
       };
-    }, [editableRide])
+    }, [editableRide]),
   );
 
   useFocusEffect(
     useCallback(() => {
       setDateTime(new Date());
-    }, [])
+    }, []),
   );
 
   useEffect(() => {
@@ -303,8 +311,8 @@ export default function Home({ route, navigation }) {
           />
 
           <TabSwitcher
-            vehicleType={vehicleType}
-            setVehicleType={setVehicleType}
+            type={vehicleType}
+            setType={setVehicleType}
             setSeats={setSeats}
           />
           <Card style={{ paddingBottom: Platform.OS === "ios" ? 30 : 16 }}>
@@ -354,7 +362,11 @@ export default function Home({ route, navigation }) {
                 disabled={!origin || !destination || selectedPrice == null}
                 loading={loading}
               >
-                {editableRide ? "Update Ride" : " Offer Ride"}
+                {editableRide && action === "edit"
+                  ? "Update Ride"
+                  : editableRide && action === "repost"
+                    ? "Repost Ride"
+                    : "Offer Ride"}
               </Button>
             </View>
           </Card>

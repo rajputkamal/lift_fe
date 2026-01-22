@@ -53,7 +53,9 @@ export default function Button({
 const styles = StyleSheet.create({
   button: {
     backgroundColor: theme.color.purple600,
-    paddingVertical: theme.spacing.sm,
+     borderWidth: 1,
+    borderColor: theme.color.purple600,
+    paddingVertical: 6,
     paddingHorizontal: theme.spacing.sm,
     borderRadius: theme.borderRadius.x_lg,
     alignItems: "center",

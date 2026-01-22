@@ -13,7 +13,8 @@ import Card from "./Card";
 import Avatar from "./Avatar";
 import CallUser from "./CallUser";
 import Time from "./Time";
-import Button from "./Button";
+import RideActions from "./RideActions";
+import RepostAction from "./RepostAction";
 
 export default function RideCard({
   ride,
@@ -24,6 +25,7 @@ export default function RideCard({
   const { user } = useContext(UserContext);
 
   const isYourRide = user?.phoneNumber === ride?.userNumber;
+  const isActiveRide = ride?.status === "ACTIVE";
 
   return (
     <Card>
@@ -64,21 +66,14 @@ export default function RideCard({
         </Text>
         <Time time={ride?.time} seats={ride?.seatsAvailable} />
       </View>
-      {isYourRide ? (
-        <View style={styles.actionButtons}>
-          <View style={styles.button}>
-            <Button
-              secondary
-              loadingRideDeletion={loadingRideDeletion}
-              onPress={() => onDeleteRide(ride._id)}
-            >
-              Delete
-            </Button>
-          </View>
-          <View style={styles.button}>
-            <Button onPress={() => onUpdateRide(ride)}>Edit</Button>
-          </View>
-        </View>
+      {isYourRide && isActiveRide ? (
+        <RideActions
+          loadingRideDeletion={loadingRideDeletion}
+          onDeleteRide={() => onDeleteRide(ride._id)}
+          onUpdateRide={() => onUpdateRide(ride, "edit")}
+        />
+      ) : isYourRide && !isActiveRide ? (
+        <RepostAction onRepostRide={() => onUpdateRide(ride, "repost")} />
       ) : (
         <CallUser phoneNumber={ride?.userNumber} />
       )}
@@ -124,13 +119,5 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSize._16,
     fontWeight: theme.weight.semi,
     color: theme.color.primary,
-  },
-  actionButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: theme.spacing.xs,
-  },
-  button: {
-    width: "50%",
   },
 });

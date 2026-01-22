@@ -42,7 +42,7 @@ export default function ProfileSettingsScreen({ navigation }) {
 
     if (!trimmed) {
       setError(
-        `${key === "name" ? "Name" : "Vehicle number"} cannot be empty.`
+        `${key === "name" ? "Name" : "Vehicle number"} cannot be empty.`,
       );
       return;
     }
@@ -83,7 +83,7 @@ export default function ProfileSettingsScreen({ navigation }) {
       if (key === "vehicleNumber") setEditingVehicle(false);
 
       setSuccess(
-        `${key === "name" ? "Name" : "Vehicle number"} updated successfully.`
+        `${key === "name" ? "Name" : "Vehicle number"} updated successfully.`,
       );
     } catch (err) {
       setError("Failed to update profile. Please try again.");
@@ -208,6 +208,14 @@ export default function ProfileSettingsScreen({ navigation }) {
           <View>
             <Text style={styles.label}>Mobile</Text>
             <Text style={styles.value}>+91 {user?.phoneNumber}</Text>
+          </View>
+        </Card>
+        <Card>
+          <View>
+            <Text style={styles.label}>Rides Summary</Text>
+            <Text
+              style={styles.value}
+            >{`Active: ${user?.rideSummary.activeRides || 0} | Total: ${user?.rideSummary.totalRides || 0}`}</Text>
           </View>
         </Card>
         <Card>

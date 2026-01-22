@@ -5,7 +5,7 @@ import {
   StyleSheet,
   LayoutAnimation,
 } from "react-native";
-import { CarFront, Bike, User } from "lucide-react-native";
+import { CarFront, Bike, AlarmClockCheck } from "lucide-react-native";
 import { theme } from "../styles/theme";
 
 const TAB_CONFIG = {
@@ -14,16 +14,15 @@ const TAB_CONFIG = {
     { key: "bike", label: "Bike", Icon: Bike },
   ],
   rides: [
-    { key: "ride", label: "My Rides", Icon: User },
-    { key: "car", label: "Car", Icon: CarFront },
-    { key: "bike", label: "Bike", Icon: Bike },
+    { key: "active", label: "Active", Icon: CarFront },
+    { key: "completed", label: "Completed", Icon: AlarmClockCheck },
   ],
 };
 
 export default function TabSwitcher({
   mode = "main",
-  vehicleType = "car",
-  setVehicleType,
+  type = "car",
+  setType,
   setSeats,
 }) {
   const tabs = TAB_CONFIG[mode] ?? TAB_CONFIG.main;
@@ -35,13 +34,13 @@ export default function TabSwitcher({
       setSeats?.(1);
     }
 
-    setVehicleType(key);
+    setType(key);
   };
 
   return (
     <View style={styles.container}>
       {tabs.map(({ key, label, Icon }) => {
-        const isActive = vehicleType === key;
+        const isActive = type === key;
         const color = isActive ? theme.color.gray900 : theme.color.gray600;
 
         return (

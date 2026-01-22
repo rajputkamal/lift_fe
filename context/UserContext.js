@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useCallback } from "react";
 
 import { getUserProfile } from "../apis/profile.js";
 
@@ -7,23 +7,29 @@ const UserContext = createContext({
   token: null,
   setUser: () => {},
   logout: () => {},
+  refreshUser: async () => {},
 });
 
 export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    async function fetchUser() {
+  const refreshUser = useCallback(async () => {
+    try {
       const result = await getUserProfile();
       if (result?.data) {
         setUser(result.data);
       }
+    } catch (e) {
+      console.error("Failed to refresh user", e);
     }
-    fetchUser();
   }, []);
 
+  useEffect(() => {
+    refreshUser();
+  }, [refreshUser]);
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, refreshUser }}>
       {children}
     </UserContext.Provider>
   );
