@@ -1,3 +1,5 @@
+import { Linking } from "react-native";
+
 export const maskNumber = (number) => {
   const str = number.toString();
   if (str.length <= 4) return str;
@@ -13,3 +15,7 @@ export const capitalizeWords = (str = "") =>
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+
+export const openURL = (url) => {
+  Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
+};

@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.x_lg,
   },
   activeTab: {
-    backgroundColor: theme.color.gray300,
+    backgroundColor: theme.color.gray200,
   },
   content: {
     flexDirection: "row",

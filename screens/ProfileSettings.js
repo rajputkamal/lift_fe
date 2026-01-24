@@ -9,7 +9,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Pencil, Check, LogOut } from "lucide-react-native";
+import { Pencil, Check, LogOut, ExternalLink } from "lucide-react-native";
 import * as Application from "expo-application";
 
 import { theme } from "../styles/theme";
@@ -20,7 +20,8 @@ import UserContext from "../context/UserContext";
 import Footer from "../components/Footer";
 import LiftSnackBar from "../components/LiftSnackbar";
 import Avatar from "../components/Avatar";
-import { capitalizeWords } from "../utils/helper";
+import { capitalizeWords, openURL } from "../utils/helper";
+import { FAQ_LINK, SUPPORT_LINK } from "../utils/constants.js";
 
 export default function ProfileSettingsScreen({ navigation }) {
   const { user, setUser } = useContext(UserContext);
@@ -212,18 +213,48 @@ export default function ProfileSettingsScreen({ navigation }) {
         </Card>
         <Card>
           <View>
-            <Text style={styles.label}>Rides Summary</Text>
-            <Text
-              style={styles.value}
-            >{`Active: ${user?.rideSummary.activeRides || 0} | Total: ${user?.rideSummary.totalRides || 0}`}</Text>
+            <Text style={styles.label}>Your Rides</Text>
+            <Text style={styles.value}>
+              {`${user?.rideSummary.totalRides || 0} rides`}{" "}
+              <Text style={styles.helperText}>
+                (includes active, completed & deleted)
+              </Text>
+            </Text>
           </View>
         </Card>
+
         <Card>
           <View>
             <Text style={styles.label}>App Version</Text>
             <Text style={styles.value}>
               v{Application.nativeApplicationVersion}
             </Text>
+          </View>
+        </Card>
+        <Card rounded>
+          <View>
+            <TouchableOpacity
+              onPress={() => openURL(FAQ_LINK)}
+              style={styles.logoutContainer}
+            >
+              <Text style={[styles.logout, { color: theme.color.purple600 }]}>
+                FAQs
+              </Text>
+              <ExternalLink size={18} color={theme.color.purple600} />
+            </TouchableOpacity>
+          </View>
+        </Card>
+        <Card rounded>
+          <View>
+            <TouchableOpacity
+              onPress={() => openURL(SUPPORT_LINK)}
+              style={styles.logoutContainer}
+            >
+              <Text style={[styles.logout, { color: theme.color.purple600 }]}>
+                Help & Support
+              </Text>
+              <ExternalLink size={18} color={theme.color.purple600} />
+            </TouchableOpacity>
           </View>
         </Card>
         <Card rounded>
@@ -296,5 +327,13 @@ const styles = StyleSheet.create({
     color: theme.color.orange500,
     fontSize: theme.fontSize._16,
     fontWeight: theme.weight.medium,
+  },
+  helperText: {
+    fontSize: theme.fontSize._12,
+    color: theme.color.gray400,
+    fontWeight: theme.weight.regular,
+  },
+  helpIconContainer: {
+    marginRight: theme.spacing.lg,
   },
 });
